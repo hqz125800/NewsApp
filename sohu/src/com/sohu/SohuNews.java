@@ -4,13 +4,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,15 +32,15 @@ import com.sohu.bean.NewsBean;
 import com.sohu.db.ConnectionManager;
 
 /**
- * 鐢ㄤ簬瀵规悳鐙愮綉绔欎笂鐨勬柊闂昏繘琛屾姄鍙�
+ * 用于对搜狐网站上的新闻进行抓取
  * @author guanminglin <guanminglin@gmail.com>
  */
 public class SohuNews {
 
-    private Parser parser = null;   //鐢ㄤ簬鍒嗘瀽缃戦〉鐨勫垎鏋愬櫒銆�
-    private List newsList = new ArrayList();    //鏆傚瓨鏂伴椈鐨凩ist锛�
+    private Parser parser = null;   //用于分析网页的分析器。
+    private List newsList = new ArrayList();    //暂存新闻的List；
     private NewsBean bean = new NewsBean();
-    private ConnectionManager manager = null;    //鏁版嵁搴撹繛鎺ョ鐞嗗櫒銆�
+    private ConnectionManager manager = null;    //数据库连接管理器。
     private PreparedStatement pstmt = null;
     public String newsTitle = null;
     public String newsPic = null;
@@ -51,10 +51,9 @@ public class SohuNews {
 
     public SohuNews() {
     }
-    //test
 
     /**
-     * 鑾峰緱涓�鏉″畬鏁寸殑鏂伴椈銆�
+     * 获得一条完整的新闻。
      * @param newsBean
      * @return
      */
@@ -72,12 +71,12 @@ public class SohuNews {
     }
 
     /**
-     *  璁剧疆鏂伴椈瀵硅薄锛岃鏂伴椈瀵硅薄閲屾湁鏂伴椈鏁版嵁
-     * @param newsTitle 鏂伴椈鏍囬
-     * @param newsauthor  鏂伴椈浣滆��
-     * @param newsContent 鏂伴椈鍐呭
-     * @param newsDate  鏂伴椈鏃ユ湡
-     * @param url  鏂伴椈閾炬帴
+     *  设置新闻对象，让新闻对象里有新闻数据
+     * @param newsTitle 新闻标题
+     * @param newsauthor  新闻作者
+     * @param newsContent 新闻内容
+     * @param newsDate  新闻日期
+     * @param url  新闻链接
      */
     public void setNews(String newsTitle, String newsauthor, String newsContent, String newsDate, String url,String newsPic) {
         bean.setNewsTitle(newsTitle);
@@ -89,17 +88,17 @@ public class SohuNews {
     }
 
     /**
-     * 璇ユ柟娉曠敤浜庡皢鏂伴椈娣诲姞鍒版暟鎹簱涓��
+     * 该方法用于将新闻添加到数据库中。
      */
     protected void newsToDataBase(final String table) {
 
-        //寤虹珛涓�涓嚎绋嬬敤鏉ユ墽琛屽皢鏂伴椈鎻掑叆鍒版暟鎹簱涓��
+        //建立一个线程用来执行将新闻插入到数据库中。
         Thread thread = new Thread(new Runnable() {
 
             public void run() {
                 boolean sucess = saveToDB(bean,table);
                 if (sucess != false) {
-                    System.out.println("鎻掑叆鏁版嵁澶辫触");
+                    System.out.println("插入数据失败");
                 }
             }
         });
@@ -107,16 +106,16 @@ public class SohuNews {
     }
 
     /**
-     * 灏嗘柊闂绘彃鍏ュ埌鏁版嵁搴撲腑
+     * 将新闻插入到数据库中
      * @param bean
      * @return
      */
     public boolean saveToDB(NewsBean bean,String table) {
         boolean flag = true;
-        String sql = "insert into "+table+"(newstitle,newsauthor,newscontent,newsurl,newsdate,newspic) values(?,?,?,?,?,?)";
+        String sql = "insert into "+table+"(newstitle,newsauthor,newscontent,newsurl,newsdate,newspic,newsid) values(?,?,?,?,?,?,?)";
         manager = new ConnectionManager();
         String titleLength = bean.getNewsTitle();
-        if (titleLength.length() > 60) {  //鏍囬澶暱鐨勬柊闂讳笉瑕併��
+        if (titleLength.length() > 60) {  //标题太长的新闻不要。
             return flag;
         }
         try {
@@ -126,22 +125,18 @@ public class SohuNews {
 //            pstmt.setString(3, new String(bean.getNewsContent().getBytes("gb2312"),"utf-8"));
 //            pstmt.setString(4, new String(bean.getNewsURL().getBytes("gb2312"),"utf-8"));
             pstmt.setString(1, bean.getNewsTitle());
-            pstmt.setString(1, new String("乱码".getBytes(),"UTF-8"));
             pstmt.setString(2, bean.getNewsAuthor());
-            //pstmt.setString(3, bean.getNewsContent());
             pstmt.setString(3, bean.getNewsContent());
-            pstmt.setString(3, "中文乱码怎解决");
             pstmt.setString(4, bean.getNewsURL());
             pstmt.setString(5, bean.getNewsDate());
             pstmt.setString(6,  bean.getNewsPic());
+            UUID newsId = UUID.randomUUID(); 
+            pstmt.setString(7,  newsId.toString().replace("-", ""));
             flag = pstmt.execute();
 
         } catch (SQLException ex) {
             Logger.getLogger(SohuNews.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
+        } finally {
             try {
                 pstmt.close();
                 manager.close();
@@ -154,7 +149,7 @@ public class SohuNews {
     }
 
     /**
-     * 鑾峰緱鏂伴椈鐨勬爣棰�
+     * 获得新闻的标题
      * @param titleFilter
      * @param parser
      * @return
@@ -176,7 +171,7 @@ public class SohuNews {
     }
 
     /**
-     * 鑾峰緱鏂伴椈鐨勮矗浠荤紪杈戯紝涔熷氨鏄綔鑰呫��
+     * 获得新闻的责任编辑，也就是作者。
      * @param newsauthorFilter
      * @param parser
      * @return
@@ -198,7 +193,7 @@ public class SohuNews {
     }
 
     /*
-     * 鑾峰緱鏂伴椈鐨勬棩鏈�
+     * 获得新闻的日期
      */
     private String getNewsDate(NodeFilter dateFilter, Parser parser) {
         String newsDate = null;
@@ -216,10 +211,10 @@ public class SohuNews {
     }
 
     /**
-     * 鑾峰彇鏂伴椈鐨勫唴瀹�
+     * 获取新闻的内容
      * @param newsContentFilter
      * @param parser
-     * @return  content 鏂伴椈鍐呭
+     * @return  content 新闻内容
      */
     private String getNewsContent(NodeFilter newsContentFilter, Parser parser) {
         String content = null;
@@ -232,7 +227,7 @@ public class SohuNews {
             	Div newsContenTag = (Div) newsContentList.elementAt(i);
                 builder = builder.append(newsContenTag.getStringText());
             }
-            content = builder.toString();  //杞崲涓篠tring 绫诲瀷銆�
+            content = builder.toString();  //转换为String 类型。
             if (content != null) {
                 parser.reset();
                 parser = Parser.createParser(content, "gb2312");
@@ -240,32 +235,32 @@ public class SohuNews {
                 sb.setCollapse(true);
                 parser.visitAllNodesWith(sb);
                 content = sb.getStrings();
-                //澶勭悊鍐椾綑淇℃伅
-                if(content.indexOf("鏂伴椈鍔犵偣鏂�")>=0){
-                content =content.substring(0,content.indexOf("鏂伴椈鍔犵偣鏂�"));//搴旇鏄鏋滄湁鏂伴椈鍔犵偣鏂�,閭ｅ氨澶勭悊鏂伴椈鍔犵偣鏂�,娌℃湁鍦ㄥ鐞嗚繖涓�
+                //处理冗余信息
+                if(content.indexOf("新闻加点料")>=0){
+                content =content.substring(0,content.indexOf("新闻加点料"));//应该是如果有新闻加点料,那就处理新闻加点料,没有在处理这个
                 }
-                if(content.indexOf("鐐瑰嚮",200)>=0){
-                	content =content.substring(0,content.indexOf("鐐瑰嚮",200));
+                if(content.indexOf("点击",200)>=0){
+                	content =content.substring(0,content.indexOf("点击",200));
                 }
                 if(content.indexOf("http://")>=0){
                 	content =content.substring(0,content.indexOf("http://"));
                 }
-                if(content.indexOf("鐩稿叧闃呰",200)>=0){
-                	content =content.substring(0,content.indexOf("鐩稿叧闃呰",200));
+                if(content.indexOf("相关阅读",200)>=0){
+                	content =content.substring(0,content.indexOf("相关阅读",200));
                 }
-                if(content.indexOf("鐩稿叧鏂伴椈",200)>=0){
-                	content =content.substring(0,content.indexOf("鐩稿叧鏂伴椈",200));
+                if(content.indexOf("相关新闻",200)>=0){
+                	content =content.substring(0,content.indexOf("相关新闻",200));
                 }
 
 //                String s = "\";} else{ document.getElementById('TurnAD444').innerHTML = \"\";} } showTurnAD444(intTurnAD444); }catch(e){}";
-              //鍦ㄨ繖澶勭悊椤甸潰
+              //在这处理页面
 //                    content = content.replaceAll("\\\".*[a-z].*\\}", "");
-//                    content = content.replace("[鎴戞潵璇翠袱鍙", "");//杩囨护鍐呭鍐呬笉鍙敤鐨勪俊鎭�
+//                    content = content.replace("[我来说两句]", "");//过滤内容内不可用的信息
                 
 
 
             } else {
-                System.out.println("娌℃湁寰楀埌鏂伴椈鍐呭锛�");
+                System.out.println("没有得到新闻内容！");
             }
 
         } catch (ParserException ex) {
@@ -281,7 +276,7 @@ public class SohuNews {
     private String getImage(NodeFilter imageFilter, Parser parser) throws Exception{
     	
         StringBuilder builder = new StringBuilder();
-        String newsPics = null;
+        String newsPics = "";
 
 
 
@@ -295,31 +290,31 @@ public class SohuNews {
 	            	String urls = newsContenTag.getStringText().substring(start+"<img src=\"".length(),end);
 //	            	int starts = urls.indexOf("Img");
 	            	int ends = urls.indexOf(".jpg");
-	            	filename = urls.substring(ends-9);//鍛藉悕瑙勫垯
+	            	filename = urls.substring(ends-9);//命名规则
 	            	 URL url = new URL(urls);  
-	                 // 鎵撳紑杩炴帴  
+	                 // 打开连接  
 	                 URLConnection con = url.openConnection();  
-	                 //璁剧疆璇锋眰瓒呮椂涓�5s  
+	                 //设置请求超时为5s  
 	                 con.setConnectTimeout(5*1000);  
-	                 // 杈撳叆娴�  
+	                 // 输入流  
 	                 InputStream is = con.getInputStream();  
 	               
-	                 // 1K鐨勬暟鎹紦鍐�  
+	                 // 1K的数据缓冲  
 	                 byte[] bs = new byte[1024];  
-	                 // 璇诲彇鍒扮殑鏁版嵁闀垮害  
+	                 // 读取到的数据长度  
 	                 int len;  
-	                 // 杈撳嚭鐨勬枃浠舵祦  
-	                File sf=new File(".\\image\\");  
+	                 // 输出的文件流  
+	                File sf=new File("h:\\image\\");  
 	                if(!sf.exists()){  
 	                    sf.mkdirs();  
 	                }  
 	                OutputStream os = new FileOutputStream(sf.getPath()+"\\"+filename);
 	                newsPics = newsPics + filename + ",";
-	                 // 寮�濮嬭鍙�  
+	                 // 开始读取  
 	                 while ((len = is.read(bs)) != -1) {  
 	                   os.write(bs, 0, len);  
 	                 }  
-	                 // 瀹屾瘯锛屽叧闂墍鏈夐摼鎺�  
+	                 // 完毕，关闭所有链接  
 	                 os.close();  
 	                 is.close();  
 	                
@@ -334,33 +329,33 @@ public class SohuNews {
     }
 
     /**
-     * 鏍规嵁鎻愪緵鐨刄RL锛岃幏鍙栨URL瀵瑰簲缃戦〉鎵�鏈夌殑绾枃鏈俊鎭紝娆℃柟娉曞緱鍒扮殑淇℃伅涓嶆槸寰堢函锛�
-     *甯稿父浼氬緱鍒版垜浠笉鎯宠鐨勬暟鎹�備笉杩囧鏋滀綘鍙槸鎯冲緱鍒版煇涓猆RL 閲岀殑鎵�鏈夌函鏂囨湰淇℃伅锛岃鏂规硶杩樻槸寰堝ソ鐢ㄧ殑銆�
-     * @param url 鎻愪緵鐨刄RL閾炬帴
-     * @return RL瀵瑰簲缃戦〉鐨勭函鏂囨湰淇℃伅
+     * 根据提供的URL，获取此URL对应网页所有的纯文本信息，次方法得到的信息不是很纯，
+     *常常会得到我们不想要的数据。不过如果你只是想得到某个URL 里的所有纯文本信息，该方法还是很好用的。
+     * @param url 提供的URL链接
+     * @return RL对应网页的纯文本信息
      * @throws ParserException
-     * @deprecated 璇ユ柟娉曡 getNewsContent()鏇夸唬銆�
+     * @deprecated 该方法被 getNewsContent()替代。
      */
     @Deprecated
     public String getText(String url) throws ParserException {
         StringBean sb = new StringBean();
 
-        //璁剧疆涓嶉渶瑕佸緱鍒伴〉闈㈡墍鍖呭惈鐨勯摼鎺ヤ俊鎭�
+        //设置不需要得到页面所包含的链接信息
         sb.setLinks(false);
-        //璁剧疆灏嗕笉闂存柇绌烘牸鐢辨瑙勭┖鏍兼墍鏇夸唬
+        //设置将不间断空格由正规空格所替代
         sb.setReplaceNonBreakingSpaces(true);
-        //璁剧疆灏嗕竴搴忓垪绌烘牸鐢变竴涓崟涓�绌烘牸鎵�浠ｆ浛
+        //设置将一序列空格由一个单一空格所代替
         sb.setCollapse(true);
-        //浼犲叆瑕佽В鏋愮殑URL
+        //传入要解析的URL
         sb.setURL(url);
 
-        //杩斿洖瑙ｆ瀽鍚庣殑缃戦〉绾枃鏈俊鎭�
+        //返回解析后的网页纯文本信息
         return sb.getStrings();
     }
 
     /**
-     * 瀵规柊闂籙RL杩涜瑙ｆ瀽鎻愬彇鏂伴椈锛屽悓鏃跺皢鏂伴椈鎻掑叆鍒版暟鎹簱涓��
-     * @param url 鏂伴椈杩炴帴銆�
+     * 对新闻URL进行解析提取新闻，同时将新闻插入到数据库中。
+     * @param url 新闻连接。
      * @throws Exception 
      */
     public void parser(String url,String table) throws Exception {
@@ -368,9 +363,9 @@ public class SohuNews {
             parser = new Parser(url);
             
             NodeFilter titleFilter = new TagNameFilter("h1");
-            NodeFilter contentFilter = new AndFilter(new TagNameFilter("div"), new HasAttributeFilter("id", "contentText")); //2010 鐗�
-            NodeFilter imageFilter1 = new AndFilter(new TagNameFilter("table"), new HasAttributeFilter("class", "tableImg"));//鍥剧墖杩囨护鍣�1
-            NodeFilter imageFilter2 = new AndFilter(new TagNameFilter("table"), new HasAttributeFilter("align", "center"));//鍥剧墖杩囨护鍣�2
+            NodeFilter contentFilter = new AndFilter(new TagNameFilter("div"), new HasAttributeFilter("id", "contentText")); //2010 版
+            NodeFilter imageFilter1 = new AndFilter(new TagNameFilter("table"), new HasAttributeFilter("class", "tableImg"));//图片过滤器1
+            NodeFilter imageFilter2 = new AndFilter(new TagNameFilter("table"), new HasAttributeFilter("align", "center"));//图片过滤器2
             NodeFilter imageFilter = new OrFilter(imageFilter1,imageFilter2);
 
             //NodeFilter videotextFilter = new AndFilter(new TagNameFilter("div"), new HasAttributeFilter("class", "sele-now top-pager-current"));
@@ -378,13 +373,13 @@ public class SohuNews {
             NodeFilter newsdateFilter = new AndFilter(new TagNameFilter("div"), new HasAttributeFilter("class", "time"));
             NodeFilter newsauthorFilter = new AndFilter(new TagNameFilter("span"), new HasAttributeFilter("class", "editer"));
             
-            //寰楀埌鐨勬槸鍥剧墖鐨勫悕瀛�
+            //得到的是图片的名字
 
             
             
             newsTitle = getTitle(titleFilter, parser);
             System.out.println(newsTitle+"\n");
-            parser.reset();   //璁板緱姣忔鐢ㄥ畬parser鍚庯紝瑕侀噸缃竴娆arser銆傝涓嶇劧灏卞緱涓嶅埌鎴戜滑鎯宠鐨勫唴瀹逛簡銆�
+            parser.reset();   //记得每次用完parser后，要重置一次parser。要不然就得不到我们想要的内容了。
             
             
             newsDate = getNewsDate(newsdateFilter, parser);
@@ -393,14 +388,14 @@ public class SohuNews {
             
             
             newsContent = getNewsContent(contentFilter, parser);
-            System.out.println(newsContent);   //杈撳嚭鏂伴椈鐨勫唴瀹癸紝鏌ョ湅鏄惁绗﹀悎瑕佹眰
+            System.out.println(newsContent);   //输出新闻的内容，查看是否符合要求
             parser.reset(); 
             
             
             //String subTitle = getNewsContent(subTitleFilter, parser);
-            //System.out.println(subTitle);   //杈撳嚭鏂伴椈鐨勫唴瀹癸紝鏌ョ湅鏄惁绗﹀悎瑕佹眰
+            //System.out.println(subTitle);   //输出新闻的内容，查看是否符合要求
             //parser.reset();
-            //newsContent.replace(subTitle, " ");//鎶妔ubTitle鍘婚櫎
+            //newsContent.replace(subTitle, " ");//把subTitle去除
             //System.out.println(newsContent);         
             
             newsauthor = getNewsAuthor(newsauthorFilter, parser);
@@ -413,19 +408,19 @@ public class SohuNews {
             
             
             
-            //鍏堣缃柊闂诲璞★紝璁╂柊闂诲璞￠噷鏈夋柊闂诲唴瀹广��
+            //先设置新闻对象，让新闻对象里有新闻内容。
             setNews(newsTitle, newsauthor, newsContent, newsDate, url, newsPic);
-            //灏嗘柊闂绘坊鍔犲埌鏁版嵁涓��
-            this.newsToDataBase(table);//(涓轰粈涔堟墽琛屽け璐�)
+            //将新闻添加到数据中。
+            this.newsToDataBase(table);//(为什么执行失败)
 
         } catch (ParserException ex) {
             Logger.getLogger(SohuNews.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-//    //鍗曚釜鏂囦欢娴嬭瘯缃戦〉
+//    //单个文件测试网页
 //    public static void main(String[] args) throws Exception {
 //        SohuNews news = new SohuNews();
-//        news.parser("http://sports.sohu.com/20140522/n399886225.shtml");//鍒涘缓涓�涓彉閲�,瀹炵幇鎷栨嫿
+//        news.parser("http://sports.sohu.com/20140522/n399886225.shtml");//创建一个变量,实现拖拽
 //    }
 }

@@ -21,18 +21,17 @@ public class ConnectionManager {
     }
 
     /**
-     * 鑾峰緱鏁版嵁搴撹繛鎺�
+     * 获得数据库连接
      */
     public Connection getConnection(){
          try {
 
             String url = "jdbc:mysql://localhost:3306/cnsoftbei";
             String usr = "root";
-            String pwd = "shifu8600";
+            String pwd = "610822607";
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             con = DriverManager.getConnection(url, usr, pwd);
             con.setAutoCommit(autoCommit);
-            
         } catch (SQLException ex) {
             Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
@@ -45,7 +44,7 @@ public class ConnectionManager {
          return  con;
     }
     /**
-     *鍏抽棴鏁版嵁搴撹繛鎺�
+     *关闭数据库连接
      */
     public void close() {
         if (con != null) {
