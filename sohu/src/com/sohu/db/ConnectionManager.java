@@ -28,7 +28,7 @@ public class ConnectionManager {
 
             String url = "jdbc:mysql://localhost:3306/cnsoftbei";
             String usr = "root";
-            String pwd = "610822607";
+            String pwd = "shifu8600";
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             con = DriverManager.getConnection(url, usr, pwd);
             con.setAutoCommit(autoCommit);

@@ -57,12 +57,12 @@ public class UIdesign {
 	private JTextField textField_6;
 	private JTextField textField_7;
 	String title = null;
-
+    String newsType = null;
+	
 	private ArrayList<String> newsIds = new ArrayList<String>();
 	
     private ConnectionManager manager = null;    //数据库连接管理器。
     private PreparedStatement pstmt = null;
-//    private PreparedStatement pstmt2 = null;
 	/**
 	 * Launch the application.
 	 */
@@ -106,7 +106,7 @@ public class UIdesign {
 		// 主界面
 		final JPanel panel = new JPanel();
 		scrollPane.setViewportView(panel);
-		panel.setPreferredSize(new Dimension(313, 820));
+		panel.setPreferredSize(new Dimension(313, 690));
 		panel.setLayout(null);
 		
 		
@@ -129,34 +129,32 @@ public class UIdesign {
 		
 		
 		
+		// List所在的滚动面板
+		final JScrollPane newsContentlistpanel = new JScrollPane();
+		newsContentlistpanel.setBounds(0, 0, 315, 492);
+		newsContentlistpanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		newsContentlistpanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		frame.getContentPane().add(newsContentlistpanel);
+		newsContentlistpanel.setVisible(false);
 		
 		
-		// 点头条以后的界面
-		final JScrollPane topnewpanels = new JScrollPane();
-		topnewpanels.setBounds(0, 0, 315, 492);
-		topnewpanels
-				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		topnewpanels
-				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		frame.getContentPane().add(topnewpanels);
-		// topnewpanels.setLayout(null);
-		topnewpanels.setVisible(false);
 		
-		final JList topNewList = new JList();
-		topNewList.setBounds(0, 0, 313, 820);
-		topNewList.setPreferredSize(new Dimension(313, 820));
-		topnewpanels.setViewportView(topNewList);
-		
-        topNewList.addListSelectionListener(new ListSelectionListener() {
+		//所有新闻的列表
+		final JList newsContentlist = new JList();
+		newsContentlist.setPreferredSize(new Dimension(313, 820));
+		newsContentlistpanel.setViewportView(newsContentlist);
+		final DefaultListModel model = new DefaultListModel();
+		newsContentlist.setModel(model);//给list定义一个模板,并且安装这个模板
+		newsContentlist.addListSelectionListener(new ListSelectionListener() {
 			
 			public void valueChanged(ListSelectionEvent e) {
-				topnewpanels.setVisible(false);
-				newscontentpanel.setVisible(true);
+				newsContentlistpanel.setVisible(false);
+				newscontentpanel.setVisible(true);//从列表到正文的转换
 				String newstitle = null;
 				String newsdate = null;
 				String newsContent = null;
 				String newsauthor = null;
-				String sql = "SELECT newstitle,newsdate,newscontent,newsauthor FROM top where newsid = '" + newsIds.get(topNewList.getSelectedIndex())+"'";
+				String sql = "SELECT newstitle,newsdate,newscontent,newsauthor FROM "+ newsType +" where newsid = '" + newsIds.get(newsContentlist.getSelectedIndex())+"'";
 				manager = new ConnectionManager();
 
 				try {
@@ -188,544 +186,23 @@ public class UIdesign {
 			}
          });
 		
-
-		
-
-
-
-
-		
-		
-		
-		
-		
-
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		// 点击财经以后的页面
-		final JScrollPane fiancenewpanels = new JScrollPane();
-		fiancenewpanels.setBounds(0, 0, 315, 492);
-		fiancenewpanels
-				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		fiancenewpanels
-				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		frame.getContentPane().add(fiancenewpanels);
-		fiancenewpanels.setVisible(false);
-
-
-		final JList financeNewList = new JList();
-		financeNewList.setBounds(0, 0, 313, 820);
-		financeNewList.setPreferredSize(new Dimension(313, 820));
-		fiancenewpanels.setViewportView(financeNewList);
-        financeNewList.addListSelectionListener(new ListSelectionListener() {
-			
-			public void valueChanged(ListSelectionEvent e) {
-				topnewpanels.setVisible(false);
-				newscontentpanel.setVisible(true);
-				String newstitle = null;
-				String newsdate = null;
-				String newsContent = null;
-				String newsauthor = null;
-				String sql = "SELECT newstitle,newsdate,newscontent,newsauthor FROM top where newsid = '" + newsIds.get(financeNewList.getSelectedIndex())+"'";
-				manager = new ConnectionManager();
-
-				try {
-					pstmt = manager.getConnection().prepareStatement(sql);
-
-					ResultSet resultSet = pstmt.executeQuery();
-					if(resultSet.next()) {
-						newstitle = resultSet.getString("newstitle");
-						newsdate = resultSet.getString("newsdate");
-						newsContent = resultSet.getString("newscontent");
-						newsauthor = resultSet.getString("newsauthor");
-					}
-
-
-				} catch (SQLException ex) {
-					Logger.getLogger(SohuNews.class.getName()).log(
-							Level.SEVERE, null, ex);
-				} finally {
-					try {
-						pstmt.close();
-						manager.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(SohuNews.class.getName()).log(
-								Level.SEVERE, null, ex);
-					}
-
-				}
-				newContentLabel.setText("<html>" + "<h1>" + newstitle + "</h1>" + newsdate + "<br>" + newsContent.replaceAll("\n", "<br>") + "<br>" +  newsauthor + "</html>" );
-
-			}
-         });
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	
-
-
-		
-		
-		
-		
-		
-		
-		final JScrollPane militaryNewpanels = new JScrollPane();
-		militaryNewpanels.setBounds(0, 0, 315, 492);
-		militaryNewpanels
-				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		militaryNewpanels
-				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		frame.getContentPane().add(militaryNewpanels);
-		militaryNewpanels.setVisible(false);
-
-
-		final JList militaryNewList = new JList();
-		militaryNewList.setBounds(0, 0, 313, 820);
-		militaryNewList.setPreferredSize(new Dimension(313, 820));
-		militaryNewpanels.setViewportView(militaryNewList);
-		militaryNewList.addListSelectionListener(new ListSelectionListener() {
-			
-			public void valueChanged(ListSelectionEvent e) {
-				topnewpanels.setVisible(false);
-				newscontentpanel.setVisible(true);
-				String newstitle = null;
-				String newsdate = null;
-				String newsContent = null;
-				String newsauthor = null;
-				String sql = "SELECT newstitle,newsdate,newscontent,newsauthor FROM top where newsid = '" + newsIds.get(militaryNewList.getSelectedIndex())+"'";
-				manager = new ConnectionManager();
-
-				try {
-					pstmt = manager.getConnection().prepareStatement(sql);
-
-					ResultSet resultSet = pstmt.executeQuery();
-					if(resultSet.next()) {
-						newstitle = resultSet.getString("newstitle");
-						newsdate = resultSet.getString("newsdate");
-						newsContent = resultSet.getString("newscontent");
-						newsauthor = resultSet.getString("newsauthor");
-					}
-
-
-				} catch (SQLException ex) {
-					Logger.getLogger(SohuNews.class.getName()).log(
-							Level.SEVERE, null, ex);
-				} finally {
-					try {
-						pstmt.close();
-						manager.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(SohuNews.class.getName()).log(
-								Level.SEVERE, null, ex);
-					}
-
-				}
-				newContentLabel.setText("<html>" + "<h1>" + newstitle + "</h1>" + newsdate + "<br>" + newsContent.replaceAll("\n", "<br>") + "<br>" +  newsauthor + "</html>" );
-
-			}
-         });
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		// 点击体育以后的界面
-		final JScrollPane tiyuNewpanels = new JScrollPane();
-		tiyuNewpanels.setBounds(0, 0, 315, 492);
-		tiyuNewpanels
-				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		tiyuNewpanels
-				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		frame.getContentPane().add(tiyuNewpanels);
-		tiyuNewpanels.setVisible(false);
-		
-		final JList tiyuNewList = new JList();
-		tiyuNewList.setBounds(0, 0, 313, 820);
-		tiyuNewList.setPreferredSize(new Dimension(313, 820));
-		tiyuNewpanels.setViewportView(tiyuNewList);
-		tiyuNewList.addListSelectionListener(new ListSelectionListener() {
-			
-			public void valueChanged(ListSelectionEvent e) {
-				topnewpanels.setVisible(false);
-				newscontentpanel.setVisible(true);
-				String newstitle = null;
-				String newsdate = null;
-				String newsContent = null;
-				String newsauthor = null;
-				String sql = "SELECT newstitle,newsdate,newscontent,newsauthor FROM top where newsid = '" + newsIds.get(tiyuNewList.getSelectedIndex())+"'";
-				manager = new ConnectionManager();
-
-				try {
-					pstmt = manager.getConnection().prepareStatement(sql);
-
-					ResultSet resultSet = pstmt.executeQuery();
-					if(resultSet.next()) {
-						newstitle = resultSet.getString("newstitle");
-						newsdate = resultSet.getString("newsdate");
-						newsContent = resultSet.getString("newscontent");
-						newsauthor = resultSet.getString("newsauthor");
-					}
-
-
-				} catch (SQLException ex) {
-					Logger.getLogger(SohuNews.class.getName()).log(
-							Level.SEVERE, null, ex);
-				} finally {
-					try {
-						pstmt.close();
-						manager.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(SohuNews.class.getName()).log(
-								Level.SEVERE, null, ex);
-					}
-
-				}
-				newContentLabel.setText("<html>" + "<h1>" + newstitle + "</h1>" + newsdate + "<br>" + newsContent.replaceAll("\n", "<br>") + "<br>" +  newsauthor + "</html>" );
-
-			}
-         });
-		
-		
-		
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		// 点娱乐以后的界面
-		final JScrollPane yuleNewpanels = new JScrollPane();
-		yuleNewpanels.setBounds(0, 0, 315, 492);
-		yuleNewpanels
-				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		yuleNewpanels
-				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		frame.getContentPane().add(yuleNewpanels);
-		// yuleNewpanels.setLayout(null);
-		yuleNewpanels.setVisible(false);
-
-		final JList yuleNewList = new JList();
-		yuleNewList.setBounds(0, 0, 313, 820);
-		yuleNewList.setPreferredSize(new Dimension(313, 820));
-		yuleNewpanels.setViewportView(yuleNewList);
-		yuleNewList.addListSelectionListener(new ListSelectionListener() {
-			
-			public void valueChanged(ListSelectionEvent e) {
-				topnewpanels.setVisible(false);
-				newscontentpanel.setVisible(true);
-				String newstitle = null;
-				String newsdate = null;
-				String newsContent = null;
-				String newsauthor = null;
-				String sql = "SELECT newstitle,newsdate,newscontent,newsauthor FROM top where newsid = '" + newsIds.get(yuleNewList.getSelectedIndex())+"'";
-				manager = new ConnectionManager();
-
-				try {
-					pstmt = manager.getConnection().prepareStatement(sql);
-
-					ResultSet resultSet = pstmt.executeQuery();
-					if(resultSet.next()) {
-						newstitle = resultSet.getString("newstitle");
-						newsdate = resultSet.getString("newsdate");
-						newsContent = resultSet.getString("newscontent");
-						newsauthor = resultSet.getString("newsauthor");
-					}
-
-
-				} catch (SQLException ex) {
-					Logger.getLogger(SohuNews.class.getName()).log(
-							Level.SEVERE, null, ex);
-				} finally {
-					try {
-						pstmt.close();
-						manager.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(SohuNews.class.getName()).log(
-								Level.SEVERE, null, ex);
-					}
-
-				}
-				newContentLabel.setText("<html>" + "<h1>" + newstitle + "</h1>" + newsdate + "<br>" + newsContent.replaceAll("\n", "<br>") + "<br>" +  newsauthor + "</html>" );
-
-			}
-         });
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		// 点旅游以后的界面
-		final JScrollPane travelpanels = new JScrollPane();
-		travelpanels.setBounds(0, 0, 315, 492);
-		travelpanels
-				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		travelpanels
-				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		frame.getContentPane().add(travelpanels);
-		// travelpanels.setLayout(null);
-		travelpanels.setVisible(false);
-		
-		final JList travelList = new JList();
-		travelList.setBounds(0, 0, 313, 820);
-		travelList.setPreferredSize(new Dimension(313, 820));
-		travelpanels.setViewportView(travelList);
-		travelList.addListSelectionListener(new ListSelectionListener() {
-			
-			public void valueChanged(ListSelectionEvent e) {
-				topnewpanels.setVisible(false);
-				newscontentpanel.setVisible(true);
-				String newstitle = null;
-				String newsdate = null;
-				String newsContent = null;
-				String newsauthor = null;
-				String sql = "SELECT newstitle,newsdate,newscontent,newsauthor FROM top where newsid = '" + newsIds.get(travelList.getSelectedIndex())+"'";
-				manager = new ConnectionManager();
-
-				try {
-					pstmt = manager.getConnection().prepareStatement(sql);
 
-					ResultSet resultSet = pstmt.executeQuery();
-					if(resultSet.next()) {
-						newstitle = resultSet.getString("newstitle");
-						newsdate = resultSet.getString("newsdate");
-						newsContent = resultSet.getString("newscontent");
-						newsauthor = resultSet.getString("newsauthor");
-					}
-
-
-				} catch (SQLException ex) {
-					Logger.getLogger(SohuNews.class.getName()).log(
-							Level.SEVERE, null, ex);
-				} finally {
-					try {
-						pstmt.close();
-						manager.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(SohuNews.class.getName()).log(
-								Level.SEVERE, null, ex);
-					}
-
-				}
-				newContentLabel.setText("<html>" + "<h1>" + newstitle + "</h1>" + newsdate + "<br>" + newsContent + "<br>" +  newsauthor + "</html>" );
-
-			}
-         });
-
-		
-		
-		
-		
-		
-		
-		
 		
+        
 		
-		
-		
-		
-		
-		
-		
-		// 点时尚以后的界面
-		final JScrollPane fashionNewpanels = new JScrollPane();
-		fashionNewpanels.setBounds(0, 0, 315, 492);
-		fashionNewpanels
-				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		fashionNewpanels
-				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		frame.getContentPane().add(fashionNewpanels);
-		// fashionNewpanels.setLayout(null);
-		fashionNewpanels.setVisible(false);
-		
-		final JList fashionNewList = new JList();
-		fashionNewList.setBounds(0, 0, 313, 820);
-		fashionNewList.setPreferredSize(new Dimension(313, 820));
-		fashionNewpanels.setViewportView(fashionNewList);
-		fashionNewList.addListSelectionListener(new ListSelectionListener() {
-			
-			public void valueChanged(ListSelectionEvent e) {
-				topnewpanels.setVisible(false);
-				newscontentpanel.setVisible(true);
-				String newstitle = null;
-				String newsdate = null;
-				String newsContent = null;
-				String newsauthor = null;
-				String sql = "SELECT newstitle,newsdate,newscontent,newsauthor FROM top where newsid = '" + newsIds.get(fashionNewList.getSelectedIndex())+"'";
-				manager = new ConnectionManager();
-
-				try {
-					pstmt = manager.getConnection().prepareStatement(sql);
-
-					ResultSet resultSet = pstmt.executeQuery();
-					if(resultSet.next()) {
-						newstitle = resultSet.getString("newstitle");
-						newsdate = resultSet.getString("newsdate");
-						newsContent = resultSet.getString("newscontent");
-						newsauthor = resultSet.getString("newsauthor");
-					}
-
-
-				} catch (SQLException ex) {
-					Logger.getLogger(SohuNews.class.getName()).log(
-							Level.SEVERE, null, ex);
-				} finally {
-					try {
-						pstmt.close();
-						manager.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(SohuNews.class.getName()).log(
-								Level.SEVERE, null, ex);
-					}
 
-				}
-				newContentLabel.setText("<html>" + "<h1>" + newstitle + "</h1>" + newsdate + "<br>" + newsContent + "<br>" +  newsauthor + "</html>" );
-
-			}
-         });
-
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
-		
-		
-		
-		
-		
-		
-		// 点时尚以后的界面
-		final JScrollPane moreNewpanels = new JScrollPane();
-		moreNewpanels.setBounds(0, 0, 315, 492);
-		moreNewpanels
-				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		moreNewpanels
-				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		frame.getContentPane().add(moreNewpanels);
-		// moreNewpanels.setLayout(null);
-		moreNewpanels.setVisible(false);
-		
-		final JList moreNewList = new JList();
-		moreNewList.setBounds(0, 0, 313, 820);
-		moreNewList.setPreferredSize(new Dimension(313, 820));
-		moreNewpanels.setViewportView(moreNewList);
-		moreNewList.addListSelectionListener(new ListSelectionListener() {
-			
-			public void valueChanged(ListSelectionEvent e) {
-				topnewpanels.setVisible(false);
-				newscontentpanel.setVisible(true);
-				String newstitle = null;
-				String newsdate = null;
-				String newsContent = null;
-				String newsauthor = null;
-				String sql = "SELECT newstitle,newsdate,newscontent,newsauthor FROM top where newsid = '" + newsIds.get(moreNewList.getSelectedIndex())+"'";
-				manager = new ConnectionManager();
-
-				try {
-					pstmt = manager.getConnection().prepareStatement(sql);
-
-					ResultSet resultSet = pstmt.executeQuery();
-					if(resultSet.next()) {
-						newstitle = resultSet.getString("newstitle");
-						newsdate = resultSet.getString("newsdate");
-						newsContent = resultSet.getString("newscontent");
-						newsauthor = resultSet.getString("newsauthor");
-					}
-
-
-				} catch (SQLException ex) {
-					Logger.getLogger(SohuNews.class.getName()).log(
-							Level.SEVERE, null, ex);
-				} finally {
-					try {
-						pstmt.close();
-						manager.close();
-					} catch (SQLException ex) {
-						Logger.getLogger(SohuNews.class.getName()).log(
-								Level.SEVERE, null, ex);
-					}
 
-				}
-				newContentLabel.setText("<html>" + "<h1>" + newstitle + "</h1>" + newsdate + "<br>" + newsContent + "<br>" +  newsauthor + "</html>" );
 
-			}
-         });
-
-
-
-
-
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		//头条新闻
 		final JButton topNewButton = new JButton("");
 		topNewButton.setBounds(10, 10, 131, 159);
-		topNewButton.setIcon(new ImageIcon("D:\\work\\sohu\\resource\\头条.jpg"));
+		topNewButton.setIcon(new ImageIcon(".\\resource\\top.jpg"));
 		panel.add(topNewButton);
 		topNewButton.addActionListener(new ActionListener() {
 
@@ -733,11 +210,8 @@ public class UIdesign {
 				// TODO Auto-generated method stub
 				if (e.getSource() == topNewButton) {
 					scrollPane.setVisible(false);
-					topnewpanels.setVisible(true);
-					DefaultListModel model = new DefaultListModel();
-					topNewList.setModel(model);
-					
-					
+					newsContentlistpanel.setVisible(true);
+			        newsType = "top";
 					String title = null;
 			        String sql_top = "SELECT newstitle,newsid FROM top";
 			      
@@ -859,23 +333,21 @@ public class UIdesign {
 				 
 				 
 				 
-//军事新闻
+        //军事新闻
 		final JButton militaryNewButton = new JButton("");
 		militaryNewButton.setBounds(10, 179, 131, 159);
 		panel.add(militaryNewButton);
-		militaryNewButton.setIcon(new ImageIcon(
-				"D:\\work\\sohu\\resource\\军事.jpg"));
+		militaryNewButton.setIcon(new ImageIcon(".\\resource\\military.jpg"));
 		militaryNewButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if (e.getSource() == militaryNewButton) {
 					scrollPane.setVisible(false);
-					militaryNewpanels.setVisible(true);
-					DefaultListModel model = new DefaultListModel();
-					militaryNewList.setModel(model);
+					newsContentlistpanel.setVisible(true);
+					newsType = "military";
 					String title = null;
-			        String sql_military = "SELECT newstitle FROM military";
+			        String sql_military = "SELECT newstitle,newsid FROM military";
 			        manager = new ConnectionManager();
 
 			        try {
@@ -883,12 +355,20 @@ public class UIdesign {
 
 			            ResultSet resultSet = pstmt.executeQuery();
 						int i = 0;
+						if(newsIds!=null)
+						{
+							newsIds.clear();
+						}
 			            while(resultSet.next())
 			            {
 			            	title = resultSet.getString("newstitle"); 
-			            	model.add(i,title);
+			            	model.add(i,title);//添加条目
+			            	newsIds.add(resultSet.getString("newsid"));
 			            	i++;
 			            }
+
+
+
 			        } catch (SQLException ex) {
 			            Logger.getLogger(SohuNews.class.getName()).log(Level.SEVERE, null, ex);
 			        } finally {
@@ -983,22 +463,21 @@ public class UIdesign {
 		
 		
 		
-//旅游新闻
+        //旅游新闻
 		final JButton travelButton = new JButton("");
 		travelButton.setBounds(10, 348, 131, 159);
 		panel.add(travelButton);
-		travelButton.setIcon(new ImageIcon("D:\\work\\sohu\\resource\\旅游.jpg"));
+		travelButton.setIcon(new ImageIcon(".\\resource\\travel.jpg"));
 		travelButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if (e.getSource() == travelButton) {
 					scrollPane.setVisible(false);
-					travelpanels.setVisible(true);
-					DefaultListModel model = new DefaultListModel();
-					travelList.setModel(model);
+					newsContentlistpanel.setVisible(true);
+					newsType = "travel";
 					String title = null;
-			        String sql_travel = "SELECT newstitle FROM travel";
+			        String sql_travel = "SELECT newstitle,newsid FROM travel";
 			        manager = new ConnectionManager();
 
 			        try {
@@ -1006,12 +485,20 @@ public class UIdesign {
 
 			            ResultSet resultSet = pstmt.executeQuery();
 						int i = 0;
+						if(newsIds!=null)
+						{
+							newsIds.clear();
+						}
 			            while(resultSet.next())
 			            {
 			            	title = resultSet.getString("newstitle"); 
-			            	model.add(i,title);
+			            	model.add(i,title);//添加条目
+			            	newsIds.add(resultSet.getString("newsid"));
 			            	i++;
 			            }
+
+
+
 			        } catch (SQLException ex) {
 			            Logger.getLogger(SohuNews.class.getName()).log(Level.SEVERE, null, ex);
 			        } finally {
@@ -1027,7 +514,6 @@ public class UIdesign {
 				}
 			}
 		});
-
 		textField_4 = new JTextField();
 		textField_4.setBounds(10, 348, 131, 159);
 		panel.add(textField_4);
@@ -1104,18 +590,17 @@ public class UIdesign {
 		final JButton yuleButton = new JButton("");
 		yuleButton.setBounds(151, 179, 131, 159);
 		panel.add(yuleButton);
-		yuleButton.setIcon(new ImageIcon("D:\\work\\sohu\\resource\\娱乐.jpg"));
+		yuleButton.setIcon(new ImageIcon(".\\resource\\yule.jpg"));
 		yuleButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if (e.getSource() == yuleButton) {
 					scrollPane.setVisible(false);
-					yuleNewpanels.setVisible(true);
-					DefaultListModel model = new DefaultListModel();
-					yuleNewList.setModel(model);
+					newsContentlistpanel.setVisible(true);
+					newsType = "yule";
 					String title = null;
-			        String sql_yule = "SELECT newstitle FROM yule";
+			        String sql_yule = "SELECT newstitle,newsid FROM yule";
 			        manager = new ConnectionManager();
 
 			        try {
@@ -1123,12 +608,20 @@ public class UIdesign {
 
 			            ResultSet resultSet = pstmt.executeQuery();
 						int i = 0;
+						if(newsIds!=null)
+						{
+							newsIds.clear();
+						}
 			            while(resultSet.next())
 			            {
 			            	title = resultSet.getString("newstitle"); 
-			            	model.add(i,title);
+			            	model.add(i,title);//添加条目
+			            	newsIds.add(resultSet.getString("newsid"));
 			            	i++;
 			            }
+
+
+
 			        } catch (SQLException ex) {
 			            Logger.getLogger(SohuNews.class.getName()).log(Level.SEVERE, null, ex);
 			        } finally {
@@ -1224,18 +717,17 @@ public class UIdesign {
 		final JButton tiyuButton = new JButton("");
 		tiyuButton.setBounds(151, 348, 131, 159);
 		panel.add(tiyuButton);
-		tiyuButton.setIcon(new ImageIcon("D:\\work\\sohu\\resource\\体育.jpg"));
+		tiyuButton.setIcon(new ImageIcon(".\\resource\\tiyu.jpg"));
 		tiyuButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if (e.getSource() == tiyuButton) {
 					scrollPane.setVisible(false);
-					tiyuNewpanels.setVisible(true);
-					DefaultListModel model = new DefaultListModel();
-					tiyuNewList.setModel(model);
+					newsContentlistpanel.setVisible(true);
+					newsType = "tiyu";
 					String title = null;
-			        String sql_tiyu = "SELECT newstitle FROM tiyu";
+			        String sql_tiyu = "SELECT newstitle,newsid FROM tiyu";
 			        manager = new ConnectionManager();
 
 			        try {
@@ -1243,12 +735,20 @@ public class UIdesign {
 
 			            ResultSet resultSet = pstmt.executeQuery();
 						int i = 0;
+						if(newsIds!=null)
+						{
+							newsIds.clear();
+						}
 			            while(resultSet.next())
 			            {
 			            	title = resultSet.getString("newstitle"); 
-			            	model.add(i,title);
+			            	model.add(i,title);//添加条目
+			            	newsIds.add(resultSet.getString("newsid"));
 			            	i++;
 			            }
+
+
+
 			        } catch (SQLException ex) {
 			            Logger.getLogger(SohuNews.class.getName()).log(Level.SEVERE, null, ex);
 			        } finally {
@@ -1338,23 +838,21 @@ public class UIdesign {
 		
 		
 		
-//财经新闻
+        //财经新闻
 		final JButton financeNewButton = new JButton("");
 		financeNewButton.setBounds(151, 10, 131, 159);
 		panel.add(financeNewButton);
-		financeNewButton.setIcon(new ImageIcon(
-				"D:\\work\\sohu\\resource\\财经.jpg"));
+		financeNewButton.setIcon(new ImageIcon(".\\resource\\finance.jpg"));
 		financeNewButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if (e.getSource() == financeNewButton) {
 					scrollPane.setVisible(false);
-					fiancenewpanels.setVisible(true);
-					DefaultListModel model = new DefaultListModel();
-					financeNewList.setModel(model);
+					newsContentlistpanel.setVisible(true);
+					newsType = "finance";
 					String title = null;
-			        String sql_finance = "SELECT newstitle FROM finance";
+			        String sql_finance = "SELECT newstitle,newsid FROM finance";
 			        manager = new ConnectionManager();
 
 			        try {
@@ -1362,12 +860,20 @@ public class UIdesign {
 
 			            ResultSet resultSet = pstmt.executeQuery();
 						int i = 0;
+						if(newsIds!=null)
+						{
+							newsIds.clear();
+						}
 			            while(resultSet.next())
 			            {
 			            	title = resultSet.getString("newstitle"); 
-			            	model.add(i,title);
+			            	model.add(i,title);//添加条目
+			            	newsIds.add(resultSet.getString("newsid"));
 			            	i++;
 			            }
+
+
+
 			        } catch (SQLException ex) {
 			            Logger.getLogger(SohuNews.class.getName()).log(Level.SEVERE, null, ex);
 			        } finally {
@@ -1464,19 +970,17 @@ public class UIdesign {
 		final JButton fashionButton = new JButton("");
 		fashionButton.setBounds(10, 522, 131, 159);
 		panel.add(fashionButton);
-		fashionButton
-				.setIcon(new ImageIcon("D:\\work\\sohu\\resource\\时尚.jpg"));
+		fashionButton.setIcon(new ImageIcon(".\\resource\\fashion.jpg"));
 		fashionButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if (e.getSource() == fashionButton) {
 					scrollPane.setVisible(false);
-					fashionNewpanels.setVisible(true);
-					DefaultListModel model = new DefaultListModel();
-					fashionNewList.setModel(model);
+					newsContentlistpanel.setVisible(true);
+					newsType = "fashion";
 					String title = null;
-			        String sql_fashion = "SELECT newstitle FROM fashion";
+			        String sql_fashion = "SELECT newstitle,newsid FROM fashion";
 			        manager = new ConnectionManager();
 
 			        try {
@@ -1484,12 +988,20 @@ public class UIdesign {
 
 			            ResultSet resultSet = pstmt.executeQuery();
 						int i = 0;
+						if(newsIds!=null)
+						{
+							newsIds.clear();
+						}
 			            while(resultSet.next())
 			            {
 			            	title = resultSet.getString("newstitle"); 
-			            	model.add(i,title);
+			            	model.add(i,title);//添加条目
+			            	newsIds.add(resultSet.getString("newsid"));
 			            	i++;
 			            }
+
+
+
 			        } catch (SQLException ex) {
 			            Logger.getLogger(SohuNews.class.getName()).log(Level.SEVERE, null, ex);
 			        } finally {
@@ -1505,7 +1017,6 @@ public class UIdesign {
 				}
 			}
 		});
-
 		textField_6 = new JTextField();
 		textField_6.setBounds(10, 522, 131, 159);
 		panel.add(textField_6);
@@ -1585,18 +1096,17 @@ public class UIdesign {
 		final JButton moreButton = new JButton("");
 		moreButton.setBounds(151, 522, 131, 159);
 		panel.add(moreButton);
-		moreButton.setIcon(new ImageIcon("D:\\work\\sohu\\resource\\更多.jpg"));
+		moreButton.setIcon(new ImageIcon(".\\resource\\more.jpg"));
 		moreButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if (e.getSource() == moreButton) {
 					scrollPane.setVisible(false);
-					moreNewpanels.setVisible(true);
-					DefaultListModel model = new DefaultListModel();
-					moreNewList.setModel(model);
+					newsContentlistpanel.setVisible(true);
+					newsType = "more";
 					String title = null;
-			        String sql_more = "SELECT newstitle FROM more";
+			        String sql_more = "SELECT newstitle,newsid FROM more";
 			        manager = new ConnectionManager();
 
 			        try {
@@ -1604,12 +1114,20 @@ public class UIdesign {
 
 			            ResultSet resultSet = pstmt.executeQuery();
 						int i = 0;
+						if(newsIds!=null)
+						{
+							newsIds.clear();
+						}
 			            while(resultSet.next())
 			            {
 			            	title = resultSet.getString("newstitle"); 
-			            	model.add(i,title);
+			            	model.add(i,title);//添加条目
+			            	newsIds.add(resultSet.getString("newsid"));
 			            	i++;
 			            }
+
+
+
 			        } catch (SQLException ex) {
 			            Logger.getLogger(SohuNews.class.getName()).log(Level.SEVERE, null, ex);
 			        } finally {
@@ -1753,39 +1271,3 @@ class MyListView extends JLabel implements ListCellRenderer ,MouseListener{
 		
 }
 
-//class listIcon {
-//	Icon icon;
-//	String text;
-//
-//	public listIcon(String icon, String text) {
-//		this.icon = new ImageIcon(icon);
-//		this.text = text;
-//
-//	}
-//
-//	public Icon getIcon() {
-//		return icon;
-//	}
-//
-//	public String getText() {
-//		return text;
-//	}
-//}
-//class CustomerUI extends BasicListUI {
-//
-//    public CustomerUI() {
-//        super();
-//        cellHeights = new int[8];
-//    }
-//
-//    public void setCellHeight(int index, int value, int defaultHeight) {
-//        for (int i = 0; i < cellHeights.length; i++) {
-//            cellHeights[i] = defaultHeight;
-//        }
-//        cellHeights[index] = value;
-//    }
-//
-//    void setCellHeight(int index, int i) {
-//        cellHeights[index] = i;
-//    }
-//}

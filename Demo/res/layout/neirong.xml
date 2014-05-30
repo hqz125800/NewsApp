@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:scrollbars="none" >
+
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="center_vertical"
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp" 
+    android:scrollbars="none" > 
+
+        
+
+    <TextView
+        android:text="MH370目前很可能正在某地" 
+        android:id="@+id/title1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="3dp"
+        android:textColor="#000000"
+        android:textSize="30sp" />
+       <TextView
+        android:text="来源：搜狐新闻   2014-5-20 13:22" 
+        android:id="@+id/msg1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="10dp"
+        android:textColor="#808080"
+        android:textSize="11sp" />
+        
+     <ImageView
+        android:id="@+id/icon1"
+        android:src="@drawable/ee"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="13dp"/>
+    
+
+
+    <TextView
+        android:id="@+id/neirong1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:textColor="#000000" 
+        android:textSize="20sp"
+        android:singleLine="false" 
+        android:text="  据新华社电 马来西亚前总理马哈蒂尔18日在自己的博客上撰文指出，有人正在隐瞒有关马航MH370客机失联的一些事情，人们应当去追问波音公司和美国中央情报局，而非责怪马航和马来西亚政府。
+　　文章说，MH370客机的通信系统和GPS设备肯定被关闭了。作为MH370客机的制造者，波音公司安装了这些通信系统和GPS设备，“波音公司当然会确保这些装置不能被轻易地关闭，因为它们对飞机的安全和运行至关重要。”
+　　文章说，波音公司2006年研制的一个系统获得美国专利，该系统一旦启动，飞行员将失去对飞机的一切控制，该系统还能让一架商用客机降落在预先设定好的地点。
+　　马哈蒂尔引用某网站2006年刊登的一篇文章说，如果恐怖分子企图控制飞机，那么飞机上的“不间断自动驾驶系统”可以通过机上感应器启动，但中央情报局等政府机构也可以通过卫星系统远距离启动。
+　　马哈蒂尔说：“很明显，波音公司和某些机构拥有对包括MH370客机在内的商用客机的‘不间断控制’能力。是否有这种可能，在某人直接或远程取得对飞机的控制后，MH370客机的飞行员失去了对飞机的控制。”
+　　他认为，搜寻客机残骸、油迹或侦测黑匣子的信号都是在浪费时间和金钱，这很有可能不是燃油耗尽后的普通坠毁。MH370客机目前很可能正在某地，并且已经没有马航标识。
+　　马哈蒂尔说：“波音公司应该对这一所谓的反恐自动着陆系统进行解释。我无法想象飞行员在汹涌的大海进行软着陆，然后静静地随客机沉没。”
+　　新书《MH370航班之谜》怀疑泰美军演击落飞机
+　　据新华社电据澳大利亚媒体报道，在马航MH370航班失联71天后，第一本相关书籍于19日在悉尼起售。这本名为《MH370航班之谜》的书并没有给出确切答案，不过在某种程度上支持泰国与美国在南海举行联合军事演习期间意外将这架飞机击落的理论。书中认为，由于肇事者想掩盖错误，搜救人员可能被引向错误的方向。
+　　本书作者为作家兼记者奈杰尔·考索恩。他认为，非常有价值的一条信息是，在飞机的通信应答系统于凌晨1点21分关闭前后，在泰国湾一处钻井平台工作的新西兰人迈克·麦凯看到了一架正在燃烧的飞机。考索恩将这与泰国和美国在南海举行的联合军事演习联系起来。
+　　他这样写道：“这次演习是要模拟陆地、海上以及空中作战情形，其中包括实弹演习。”
+　　他分析说：“没准就是哪个参加军演的人无意中击落了MH370。这样的事情的确有可能发生。谁也不想再发生洛克比空难（1988年美国泛美航空103号航班因恐怖分子制造爆炸而坠毁，据称恐怖分子是因美国军舰半年前击落伊朗一架客机而实施报复），所以肇事方有充分的理由对此保持沉默。”
+　　他认为，肇事方可能通过匿名的消息人士散播错误信息，导致人们在错误的地方展开搜救。
+　　考索恩写道：“毕竟，在南印度洋没有找到任何残骸，这本身就很可疑。”"
+        />
+
+
+</LinearLayout>
+
+</ScrollView> 

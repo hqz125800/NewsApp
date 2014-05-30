@@ -1,11 +1,19 @@
 package com.sohu;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -37,7 +45,9 @@ import com.sohu.db.ConnectionManager;
  */
 public class SohuNews {
 
-    private Parser parser = null;   //用于分析网页的分析器。
+    private static final String SERVERIP = "192.168.63.11";
+	private static final int SERVERPORT = 54321;
+	private Parser parser = null;   //用于分析网页的分析器。
     private List newsList = new ArrayList();    //暂存新闻的List；
     private NewsBean bean = new NewsBean();
     private ConnectionManager manager = null;    //数据库连接管理器。
@@ -112,6 +122,7 @@ public class SohuNews {
      */
     public boolean saveToDB(NewsBean bean,String table) {
         boolean flag = true;
+        UUID newsId = UUID.randomUUID(); 
         String sql = "insert into "+table+"(newstitle,newsauthor,newscontent,newsurl,newsdate,newspic,newsid) values(?,?,?,?,?,?,?)";
         manager = new ConnectionManager();
         String titleLength = bean.getNewsTitle();
@@ -130,7 +141,7 @@ public class SohuNews {
             pstmt.setString(4, bean.getNewsURL());
             pstmt.setString(5, bean.getNewsDate());
             pstmt.setString(6,  bean.getNewsPic());
-            UUID newsId = UUID.randomUUID(); 
+            
             pstmt.setString(7,  newsId.toString().replace("-", ""));
             flag = pstmt.execute();
 
@@ -145,6 +156,30 @@ public class SohuNews {
             }
 
         }
+        
+        String sql_sqlite = "INSERT INTO "+table+"(`newspic`, `newsid`, `newstitle`, `newsauthor`, `newscontent`, `newsurl`, `newsdate`)VALUES('"+bean.getNewsPic()+"', '"+newsId.toString().replace("-", "")+"','"+bean.getNewsTitle()+"','"+bean.getNewsAuthor()+"','"+newsContent.replaceAll("\r\n", "<br>")+"','"+bean.getNewsURL()+"','"+bean.getNewsDate()+"')";
+		Socket socket = null;
+		try {
+			socket = new Socket(SERVERIP, SERVERPORT);
+
+			PrintWriter writer = new PrintWriter(new BufferedWriter(
+					new OutputStreamWriter(socket.getOutputStream())));
+			writer.println(sql_sqlite);
+			writer.flush();
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					socket.getInputStream()));
+			//mReceivedMsg = reader.readLine();
+			writer.close();
+			reader.close();
+			socket.close();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         return flag;
     }
 
@@ -304,7 +339,7 @@ public class SohuNews {
 	                 // 读取到的数据长度  
 	                 int len;  
 	                 // 输出的文件流  
-	                File sf=new File("h:\\image\\");  
+	                File sf=new File(".\\image\\");  
 	                if(!sf.exists()){  
 	                    sf.mkdirs();  
 	                }  
