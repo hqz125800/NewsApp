@@ -3,10 +3,14 @@ package com.sohu.UI;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,6 +29,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -32,8 +37,8 @@ import javax.swing.event.ListSelectionListener;
 
 import com.sohu.SohuNews;
 import com.sohu.db.ConnectionManager;
-
-import javax.swing.SwingConstants;
+import java.awt.Color;
+import java.awt.Font;
 
 
 
@@ -56,8 +61,17 @@ public class UIdesign {
 	private JTextField textField_5;
 	private JTextField textField_6;
 	private JTextField textField_7;
+	
+	private ImageIcon background;
+	private JPanel imagePanel;
+
+	private int xx, yy;
+
+	
 	String title = null;
     String newsType = null;
+    //boolean atList = false ;
+    int state = 1;
 	
 	private ArrayList<String> newsIds = new ArrayList<String>();
 	
@@ -92,22 +106,60 @@ public class UIdesign {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setTitle("新闻发布平台");
-		frame.setSize(331, 530);
+		frame.setSize(290, 570);
+		frame.setUndecorated(true);//设为无边框
+		frame.setLocation(550, 80);
+		frame.getContentPane().setLayout(null);//框架使用绝对定位
+		//移动软件窗体
+		frame.addMouseListener(new MouseAdapter() {
+			// 按下（mousePressed 不是点击，而是鼠标被按下没有抬起）
+			public void mousePressed(MouseEvent e) {
+				// 当鼠标按下的时候获得窗口当前的位置
+				xx = e.getX();
+				yy = e.getY();
+			}
+		});
+		frame.addMouseMotionListener(new MouseMotionAdapter() {
+			// 拖动（mouseDragged 指的不是鼠标在窗口中移动，而是用鼠标拖动）
+			public void mouseDragged(MouseEvent e) {
+				// 当鼠标拖动时获取窗口当前位置
+				Point p = frame.getLocation();
+				// 设置窗口的位置
+				// 窗口当前的位置 + 鼠标当前在窗口的位置 - 鼠标按下的时候在窗口的位置
+				frame.setLocation(p.x + e.getX() - xx, p.y + e.getY()- yy);
+			}
+		});
+		
+		
+		
+		background = new ImageIcon("003.jpg");// 背景图片
+		  JLabel label = new JLabel(background);// 把背景图片显示在一个标签里面
+		  // 把标签的大小位置设置为图片刚好填充整个面板
+		  label.setBounds(0, 0, background.getIconWidth(),
+		    background.getIconHeight());
+		  // 把内容窗格转化为JPanel，否则不能用方法setOpaque()来使内容窗格透明
+		  imagePanel = (JPanel) frame.getContentPane();
+		  imagePanel.setOpaque(false);
+		  frame.getLayeredPane().setLayout(null);
+		  // 把背景图片添加到分层窗格的最底层作为背景
+		  frame.getLayeredPane().add(label, new Integer(Integer.MIN_VALUE));
 		frame.getContentPane().setLayout(null);
 
+
+
+
 		final JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 0, 315, 492);
-		scrollPane
-				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane
-				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setBounds(24,72,243,431);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		frame.getContentPane().add(scrollPane);
 
+		
+		
 		// 主界面
 		final JPanel panel = new JPanel();
 		scrollPane.setViewportView(panel);
-		panel.setPreferredSize(new Dimension(313, 690));
-		panel.setLayout(null);
+		panel.setPreferredSize(new Dimension(243, 580));
 		
 		
 		
@@ -115,14 +167,16 @@ public class UIdesign {
 		// 所有新闻的正文标签
 		final JScrollPane newscontentpanel = new JScrollPane();
 		newscontentpanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		newscontentpanel.setBounds(0, 0, 315, 492);
+		newscontentpanel.setBounds(24,72,243,431);
 		frame.getContentPane().add(newscontentpanel);
 		newscontentpanel.setVisible(false);
 		
 		final JLabel newContentLabel = new JLabel("New label");
+		newContentLabel.setFont(new Font("微软雅黑", Font.BOLD, 12));
 		newContentLabel.setVerticalAlignment(SwingConstants.TOP);//置顶对齐
-		newContentLabel.setBounds(0, 0, 315, 492);
-		newContentLabel.setPreferredSize(new Dimension(300, 820));//300这个宽度比较适合
+		newContentLabel.setOpaque(true);//必须设为透明背景色才可以显示出来
+		newContentLabel.setBackground(Color.WHITE);
+		newContentLabel.setPreferredSize(new Dimension(235,5000));//如何计算文本的长度?
 		newscontentpanel.setViewportView(newContentLabel);
 		
 		
@@ -131,7 +185,7 @@ public class UIdesign {
 		
 		// List所在的滚动面板
 		final JScrollPane newsContentlistpanel = new JScrollPane();
-		newsContentlistpanel.setBounds(0, 0, 315, 492);
+		newsContentlistpanel.setBounds(24,72,243,431);
 		newsContentlistpanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		newsContentlistpanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		frame.getContentPane().add(newsContentlistpanel);
@@ -141,7 +195,7 @@ public class UIdesign {
 		
 		//所有新闻的列表
 		final JList newsContentlist = new JList();
-		newsContentlist.setPreferredSize(new Dimension(313, 820));
+		newsContentlist.setPreferredSize(new Dimension(243, 820));
 		newsContentlistpanel.setViewportView(newsContentlist);
 		final DefaultListModel model = new DefaultListModel();
 		newsContentlist.setModel(model);//给list定义一个模板,并且安装这个模板
@@ -150,6 +204,8 @@ public class UIdesign {
 			public void valueChanged(ListSelectionEvent e) {
 				newsContentlistpanel.setVisible(false);
 				newscontentpanel.setVisible(true);//从列表到正文的转换
+				state = 3;//在第三页
+//				atList = false;
 				String newstitle = null;
 				String newsdate = null;
 				String newsContent = null;
@@ -185,13 +241,102 @@ public class UIdesign {
 				newContentLabel.setText("<html>" + "<h1>" + newstitle + "</h1>" + newsdate + "<br>" + newsContent.replaceAll("\n", "<br>") + "<br>" +  newsauthor + "</html>" );
 			}
          });
+		panel.setLayout(null);
 		
 		
-		
-		
+		JButton exitButton = new JButton("");
+		exitButton.setBounds(50, 518, 63, 11);
+		frame.getContentPane().add(exitButton);
+		exitButton.setContentAreaFilled(false);
+		exitButton.setBorderPainted(false);
+		exitButton.addActionListener(new ActionListener(){
 
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				System.exit(1);
+			}});
 		
-        
+		
+		
+		//主页键
+		JButton homeButton = new JButton("");
+		homeButton.setBounds(113, 518, 64, 11);
+		homeButton.setContentAreaFilled(false);
+		homeButton.setBorderPainted(false);
+
+		frame.getContentPane().add(homeButton);
+		homeButton.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if(state == 2)
+				{
+					newsContentlistpanel.setVisible(false);
+					scrollPane.setVisible(true);
+					state = 1;
+				}
+				else if(state == 3)
+				{
+					newscontentpanel.setVisible(false);
+					scrollPane.setVisible(true);
+					state = 1;
+				}
+//				if(!atList &&newsType != "")
+//				{
+//					newscontentpanel.setVisible(false);
+//					scrollPane.setVisible(true);
+//					
+//				}
+//				else if(atList &&newsType != "")
+//				{
+//					newsContentlistpanel.setVisible(false);
+//					scrollPane.setVisible(true);
+//					newsType = "";
+//					atList = false;
+//				}
+			}});
+		
+		
+		
+		
+        //返回键 
+		JButton returnButton = new JButton("");
+		returnButton.setBounds(175,518,63,11);
+		returnButton.setContentAreaFilled(false);
+		returnButton.setBorderPainted(false);
+		frame.getContentPane().add(returnButton);
+		returnButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if(state == 2)
+				{
+					newsContentlistpanel.setVisible(false);
+					scrollPane.setVisible(true);
+					state = 1;
+				}
+				else if(state == 3)
+				{
+					newscontentpanel.setVisible(false);
+					newsContentlistpanel.setVisible(true);
+					state = 2;
+				}
+//				if(!atList &&newsType != "")
+//				{
+//					newscontentpanel.setVisible(false);
+//					newsContentlistpanel.setVisible(true);
+//					atList = true;
+//				}
+//				else if(atList &&newsType != "")
+//				{
+//					newsContentlistpanel.setVisible(false);
+//					scrollPane.setVisible(true);
+//					newsType = "";
+//					atList = false;
+//				}
+
+				
+			}});
 		
 
 		
@@ -201,7 +346,7 @@ public class UIdesign {
 		
 		//头条新闻
 		final JButton topNewButton = new JButton("");
-		topNewButton.setBounds(10, 10, 131, 159);
+		topNewButton.setBounds(5, 5, 106, 136);
 		topNewButton.setIcon(new ImageIcon(".\\resource\\top.jpg"));
 		panel.add(topNewButton);
 		topNewButton.addActionListener(new ActionListener() {
@@ -212,6 +357,8 @@ public class UIdesign {
 					scrollPane.setVisible(false);
 					newsContentlistpanel.setVisible(true);
 			        newsType = "top";
+			        state = 2;
+//			        atList = true;
 					String title = null;
 			        String sql_top = "SELECT newstitle,newsid FROM top";
 			      
@@ -252,7 +399,7 @@ public class UIdesign {
 			}
 		});
 		textField = new JTextField();
-		textField.setBounds(10, 10, 131, 159);
+		textField.setBounds(5, 5, 106, 136);
 		panel.add(textField);
 		textField.setColumns(10);
 		
@@ -335,7 +482,7 @@ public class UIdesign {
 				 
         //军事新闻
 		final JButton militaryNewButton = new JButton("");
-		militaryNewButton.setBounds(10, 179, 131, 159);
+		militaryNewButton.setBounds(5,148,106,136);
 		panel.add(militaryNewButton);
 		militaryNewButton.setIcon(new ImageIcon(".\\resource\\military.jpg"));
 		militaryNewButton.addActionListener(new ActionListener() {
@@ -346,6 +493,8 @@ public class UIdesign {
 					scrollPane.setVisible(false);
 					newsContentlistpanel.setVisible(true);
 					newsType = "military";
+			        state = 2;
+//			        atList = true;
 					String title = null;
 			        String sql_military = "SELECT newstitle,newsid FROM military";
 			        manager = new ConnectionManager();
@@ -385,7 +534,7 @@ public class UIdesign {
 			}
 		});
 		textField_2 = new JTextField();
-		textField_2.setBounds(10, 179, 131, 159);
+		textField_2.setBounds(5,148,106,136);
 		panel.add(textField_2);
 		textField_2.setColumns(10);
 		militaryNewButton.addMouseListener(new MouseListener() {
@@ -465,7 +614,7 @@ public class UIdesign {
 		
         //旅游新闻
 		final JButton travelButton = new JButton("");
-		travelButton.setBounds(10, 348, 131, 159);
+		travelButton.setBounds(5, 291, 106, 136);
 		panel.add(travelButton);
 		travelButton.setIcon(new ImageIcon(".\\resource\\travel.jpg"));
 		travelButton.addActionListener(new ActionListener() {
@@ -476,6 +625,8 @@ public class UIdesign {
 					scrollPane.setVisible(false);
 					newsContentlistpanel.setVisible(true);
 					newsType = "travel";
+			        state = 2;
+//			        atList = true;
 					String title = null;
 			        String sql_travel = "SELECT newstitle,newsid FROM travel";
 			        manager = new ConnectionManager();
@@ -515,7 +666,7 @@ public class UIdesign {
 			}
 		});
 		textField_4 = new JTextField();
-		textField_4.setBounds(10, 348, 131, 159);
+		textField_4.setBounds(5, 291, 106, 136);
 		panel.add(textField_4);
 		textField_4.setColumns(10);
 		travelButton.addMouseListener(new MouseListener() {
@@ -588,7 +739,7 @@ public class UIdesign {
 		
 //娱乐新闻
 		final JButton yuleButton = new JButton("");
-		yuleButton.setBounds(151, 179, 131, 159);
+		yuleButton.setBounds(115, 148, 106, 136);
 		panel.add(yuleButton);
 		yuleButton.setIcon(new ImageIcon(".\\resource\\yule.jpg"));
 		yuleButton.addActionListener(new ActionListener() {
@@ -599,6 +750,8 @@ public class UIdesign {
 					scrollPane.setVisible(false);
 					newsContentlistpanel.setVisible(true);
 					newsType = "yule";
+			        state = 2;
+//			        atList = true;
 					String title = null;
 			        String sql_yule = "SELECT newstitle,newsid FROM yule";
 			        manager = new ConnectionManager();
@@ -638,7 +791,7 @@ public class UIdesign {
 			}
 		});
 		textField_3 = new JTextField();
-		textField_3.setBounds(151, 179, 131, 159);
+		textField_3.setBounds(115, 148, 105, 136);
 		panel.add(textField_3);
 		textField_3.setColumns(10);
 		yuleButton.addMouseListener(new MouseListener() {
@@ -715,7 +868,7 @@ public class UIdesign {
 		
 		//体育新闻
 		final JButton tiyuButton = new JButton("");
-		tiyuButton.setBounds(151, 348, 131, 159);
+		tiyuButton.setBounds(115, 291, 106, 136);
 		panel.add(tiyuButton);
 		tiyuButton.setIcon(new ImageIcon(".\\resource\\tiyu.jpg"));
 		tiyuButton.addActionListener(new ActionListener() {
@@ -726,6 +879,8 @@ public class UIdesign {
 					scrollPane.setVisible(false);
 					newsContentlistpanel.setVisible(true);
 					newsType = "tiyu";
+			        state = 2;
+//			        atList = true;
 					String title = null;
 			        String sql_tiyu = "SELECT newstitle,newsid FROM tiyu";
 			        manager = new ConnectionManager();
@@ -765,7 +920,7 @@ public class UIdesign {
 			}
 		});
 		textField_5 = new JTextField();
-		textField_5.setBounds(151, 348, 131, 159);
+		textField_5.setBounds(115, 291, 106, 136);
 		panel.add(textField_5);
 		textField_5.setColumns(10);		
 		tiyuButton.addMouseListener(new MouseListener() {
@@ -840,7 +995,7 @@ public class UIdesign {
 		
         //财经新闻
 		final JButton financeNewButton = new JButton("");
-		financeNewButton.setBounds(151, 10, 131, 159);
+		financeNewButton.setBounds(115, 5, 106, 136);
 		panel.add(financeNewButton);
 		financeNewButton.setIcon(new ImageIcon(".\\resource\\finance.jpg"));
 		financeNewButton.addActionListener(new ActionListener() {
@@ -851,6 +1006,8 @@ public class UIdesign {
 					scrollPane.setVisible(false);
 					newsContentlistpanel.setVisible(true);
 					newsType = "finance";
+			        state = 2;
+//			        atList = true;
 					String title = null;
 			        String sql_finance = "SELECT newstitle,newsid FROM finance";
 			        manager = new ConnectionManager();
@@ -892,7 +1049,7 @@ public class UIdesign {
 
 
 		textField_1 = new JTextField();
-		textField_1.setBounds(151, 10, 131, 159);
+		textField_1.setBounds(115, 5, 105, 136);
 		panel.add(textField_1);
 		textField_1.setColumns(10);
 		financeNewButton.addMouseListener(new MouseListener() {
@@ -968,7 +1125,7 @@ public class UIdesign {
 		
 		//时尚新闻
 		final JButton fashionButton = new JButton("");
-		fashionButton.setBounds(10, 522, 131, 159);
+		fashionButton.setBounds(5, 434, 106, 136);
 		panel.add(fashionButton);
 		fashionButton.setIcon(new ImageIcon(".\\resource\\fashion.jpg"));
 		fashionButton.addActionListener(new ActionListener() {
@@ -979,6 +1136,8 @@ public class UIdesign {
 					scrollPane.setVisible(false);
 					newsContentlistpanel.setVisible(true);
 					newsType = "fashion";
+			        state = 2;
+//			        atList = true;
 					String title = null;
 			        String sql_fashion = "SELECT newstitle,newsid FROM fashion";
 			        manager = new ConnectionManager();
@@ -1018,7 +1177,7 @@ public class UIdesign {
 			}
 		});
 		textField_6 = new JTextField();
-		textField_6.setBounds(10, 522, 131, 159);
+		textField_6.setBounds(5, 434, 106, 136);
 		panel.add(textField_6);
 		textField_6.setColumns(10);
 		fashionButton.addMouseListener(new MouseListener() {
@@ -1094,7 +1253,7 @@ public class UIdesign {
 		
 		//更多新闻
 		final JButton moreButton = new JButton("");
-		moreButton.setBounds(151, 522, 131, 159);
+		moreButton.setBounds(115, 434, 106, 136);
 		panel.add(moreButton);
 		moreButton.setIcon(new ImageIcon(".\\resource\\more.jpg"));
 		moreButton.addActionListener(new ActionListener() {
@@ -1105,6 +1264,8 @@ public class UIdesign {
 					scrollPane.setVisible(false);
 					newsContentlistpanel.setVisible(true);
 					newsType = "more";
+			        state = 2;
+//			        atList = true;
 					String title = null;
 			        String sql_more = "SELECT newstitle,newsid FROM more";
 			        manager = new ConnectionManager();
@@ -1145,9 +1306,15 @@ public class UIdesign {
 		});
 
 		textField_7 = new JTextField();
-		textField_7.setBounds(151, 522, 131, 159);
+		textField_7.setBounds(115, 434, 106, 136);
 		panel.add(textField_7);
 		textField_7.setColumns(10);
+		
+
+		
+
+		
+
 		
 		
 		moreButton.addMouseListener(new MouseListener() {
@@ -1208,7 +1375,6 @@ public class UIdesign {
 		 	}
 		 });
 	}
-	
 }
 
 class MyListView extends JLabel implements ListCellRenderer ,MouseListener{

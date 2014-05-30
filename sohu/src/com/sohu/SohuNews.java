@@ -45,7 +45,7 @@ import com.sohu.db.ConnectionManager;
  */
 public class SohuNews {
 
-    private static final String SERVERIP = "192.168.63.11";
+    private static final String SERVERIP = "192.168.63.2";
 	private static final int SERVERPORT = 54321;
 	private Parser parser = null;   //用于分析网页的分析器。
     private List newsList = new ArrayList();    //暂存新闻的List；
@@ -333,7 +333,7 @@ public class SohuNews {
 	                 con.setConnectTimeout(5*1000);  
 	                 // 输入流  
 	                 InputStream is = con.getInputStream();  
-	               
+
 	                 // 1K的数据缓冲  
 	                 byte[] bs = new byte[1024];  
 	                 // 读取到的数据长度  
@@ -352,9 +352,9 @@ public class SohuNews {
 	                 // 完毕，关闭所有链接  
 	                 os.close();  
 	                 is.close();  
-	                
+
 	            }
-	            
+
 			} catch (ParserException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
