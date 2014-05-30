@@ -24,7 +24,7 @@
         <activity android:name=".Tab" >
         </activity>
         
-        <activity android:name=".Neirong" >
+        <activity android:name=".Content" >
         </activity>
         <service android:name="SocketService"></service>
         

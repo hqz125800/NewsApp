@@ -73,7 +73,6 @@ public class DataBaseHelper extends SQLiteOpenHelper  {
     	}catch(SQLiteException e){
  
     		//database does't exist yet.
- 
     	}
  
     	if(checkDB != null){
@@ -126,8 +125,8 @@ public class DataBaseHelper extends SQLiteOpenHelper  {
  
 	}
  
-        // Add your public helper methods to access and get content from the database.
-       // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
-       // to you to create adapters for your views.
+    // Add your public helper methods to access and get content from the database.
+    // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
+    // to you to create adapters for your views.
  
 }

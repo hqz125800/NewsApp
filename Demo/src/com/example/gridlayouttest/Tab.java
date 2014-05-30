@@ -18,6 +18,8 @@ import android.widget.SimpleAdapter;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class Tab extends Activity {
+	
+	ArrayList<String> newsids = new ArrayList<String>();
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,19 +30,25 @@ public class Tab extends Activity {
         //生成动态数组，加入数据
         ArrayList<HashMap<String, Object>> listItem 
         	= new ArrayList<HashMap<String, Object>>();
-        
+        Bundle bundle = getIntent().getExtras();    
+        String table=bundle.getString("Data");//读出数据
 		try {
-			String sql = "select newstitle from top";
+			String sql = "select newstitle,newsdate,newsid from "+table;
 			Cursor cursor = MainActivity.database.rawQuery(sql, null);
 			if (cursor.getCount() > 0) {
 				cursor.moveToFirst();
 
+				if(newsids!=null)
+				{
+					newsids.clear();
+				}
 				do{
 	        	HashMap<String, Object> map = new HashMap<String, Object>();
 	        	map.put("icon", R.drawable.ee);//图像资源的ID
 	        	map.put("title", cursor.getString(cursor.getColumnIndex("newstitle")));
-	        	map.put("msg", "相关负责人目前没有对事故表态");
-	        	map.put("time", "5月20日 ");
+	        	map.put("msg", "");
+	        	map.put("time", cursor.getString(cursor.getColumnIndex("newsdate")));
+	        	newsids.add(cursor.getString(cursor.getColumnIndex("newsid")));
 	        	listItem.add(map);
 				}while(cursor.moveToNext());
 
@@ -72,8 +80,11 @@ public class Tab extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				Intent xinwen = new Intent(Tab.this,Neirong.class);
-				startActivity(xinwen);
+				Intent content = new Intent(Tab.this,Content.class);
+				Bundle mBundle = new Bundle();  
+		        mBundle.putString("Data",newsids.get(arg2));//压入数据  
+		        content.putExtras(mBundle);
+				startActivity(content);
 
 	         ;
 

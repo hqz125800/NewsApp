@@ -7,7 +7,7 @@ Target Database: cnsoftbei
 Date: 2014/5/29 15:24:18
 */
 
-SET FOREIGN_KEY_CHECKS=0;
+
 -- ----------------------------
 -- Table structure for top
 -- ----------------------------
@@ -18,12 +18,26 @@ CREATE TABLE `top` (
   `newsauthor` text,
   `newscontent` text,
   `newsurl` text,
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL,
   `newsdate` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);
 
-SET FOREIGN_KEY_CHECKS=0;
+-- ----------------------------
+-- Table structure for top
+-- ----------------------------
+CREATE TABLE `travel` (
+  `newspic` text,
+  `newsid` text,
+  `newstitle` text,
+  `newsauthor` text,
+  `newscontent` text,
+  `newsurl` text,
+  `id` int(11) NOT NULL,
+  `newsdate` text,
+  PRIMARY KEY  (`id`)
+);
+
 -- ----------------------------
 -- Table structure for top
 -- ----------------------------
@@ -34,12 +48,12 @@ CREATE TABLE `finance` (
   `newsauthor` text,
   `newscontent` text,
   `newsurl` text,
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL,
   `newsdate` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);
 
-SET FOREIGN_KEY_CHECKS=0;
+
 -- ----------------------------
 -- Table structure for top
 -- ----------------------------
@@ -50,12 +64,12 @@ CREATE TABLE `military` (
   `newsauthor` text,
   `newscontent` text,
   `newsurl` text,
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL,
   `newsdate` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);
 
-SET FOREIGN_KEY_CHECKS=0;
+
 -- ----------------------------
 -- Table structure for top
 -- ----------------------------
@@ -66,12 +80,12 @@ CREATE TABLE `tiyu` (
   `newsauthor` text,
   `newscontent` text,
   `newsurl` text,
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL,
   `newsdate` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);
 
-SET FOREIGN_KEY_CHECKS=0;
+
 -- ----------------------------
 -- Table structure for top
 -- ----------------------------
@@ -82,12 +96,12 @@ CREATE TABLE `yule` (
   `newsauthor` text,
   `newscontent` text,
   `newsurl` text,
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL,
   `newsdate` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);
 
-SET FOREIGN_KEY_CHECKS=0;
+
 -- ----------------------------
 -- Table structure for top
 -- ----------------------------
@@ -98,12 +112,12 @@ CREATE TABLE `fashion` (
   `newsauthor` text,
   `newscontent` text,
   `newsurl` text,
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL,
   `newsdate` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);
 
-SET FOREIGN_KEY_CHECKS=0;
+
 -- ----------------------------
 -- Table structure for top
 -- ----------------------------
@@ -114,7 +128,7 @@ CREATE TABLE `more` (
   `newsauthor` text,
   `newscontent` text,
   `newsurl` text,
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL,
   `newsdate` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+);

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:scrollbars="none" >
+
+<LinearLayout 
+
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="center_vertical"
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp" 
+    android:scrollbars="none" > 
+
+        
+
+    <TextView
+        android:text="MH370目前很可能正在某地" 
+        android:id="@+id/title1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="3dp"
+        android:textColor="#000000"
+        android:textSize="30sp" />
+       <TextView
+        android:id="@+id/msg1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="10dp"
+        android:textColor="#808080"
+        android:textSize="11sp" />
+        
+     <ImageView
+        android:id="@+id/icon1"
+        android:src="@drawable/ee"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="13dp"/>
+    
+
+
+    <TextView
+        android:id="@+id/content1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:textColor="#000000" 
+        android:textSize="20sp"
+        android:singleLine="false" 
+        />
+
+
+</LinearLayout>
+
+</ScrollView> 

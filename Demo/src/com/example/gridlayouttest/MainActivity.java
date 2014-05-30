@@ -15,6 +15,16 @@ import android.widget.TextView;
 //Download by http://www.codefans.net
 public class MainActivity extends Activity {
 
+
+	private static final String MORE = "more";
+	private static final String FASHION = "fashion";
+	private static final String FINANCE = "finance";
+	private static final String TIYU = "tiyu";
+	private static final String YULE = "yule";
+	private static final String TRAVEL = "travel";
+	private static final String MILITARY = "military";
+	private static final String TOP = "top";
+	private static final String[] tags = {TOP,MILITARY,TRAVEL,YULE,TIYU,FINANCE,FASHION,MORE}; 
 	private TextView textView;
 	private TextView textView0;
 	static SQLiteDatabase database;
@@ -64,6 +74,9 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(MainActivity.this,Tab.class);
+				Bundle mBundle = new Bundle();  
+		        mBundle.putString("Data",TOP);//Ñ¹ÈëÊý¾Ý  
+		        intent.putExtras(mBundle);
 				startActivity(intent);
 			}
 		});
