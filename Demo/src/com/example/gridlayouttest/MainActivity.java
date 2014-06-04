@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.TextView;
-//Download by http://www.codefans.net
+
 public class MainActivity extends Activity {
 
 
@@ -25,8 +25,15 @@ public class MainActivity extends Activity {
 	private static final String MILITARY = "military";
 	private static final String TOP = "top";
 	private static final String[] tags = {TOP,MILITARY,TRAVEL,YULE,TIYU,FINANCE,FASHION,MORE}; 
-	private TextView textView;
-	private TextView textView0;
+	private TextView tt;
+	private TextView cj;
+	private TextView js;
+	private TextView yl;
+	private TextView ly;
+	private TextView ty;
+	private TextView ss;
+	private TextView gd;
+	
 	static SQLiteDatabase database;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,34 +60,112 @@ public class MainActivity extends Activity {
 
 		}
 		
-//		String sqltest = "INSERT INTO top(`newspic`, `newsid`, `newstitle`, `newsauthor`, `newscontent`, `newsurl`, `newsdate`)VALUES('', 'b9a9413fa9bc49e69ac7d5f2f908e599','评论：“反腐规律”失效凸显铁律回归','(责任编辑：un649)','　　喜欢用民间总结出来的各种“反腐规律”分析中国反腐现实的人，可能越来越看不懂中国的反腐败了，因为那些“反腐规律”在现实面前失效了，根本解释不了当下的反腐现实。<br>　　比如，按照一些人总结出来的“反腐规律”，一个官员（尤其是高官）退休了，等于就是“安全着陆”，即使有问题，也不会追究了。但中央纪委的消息打破了这个“规律”：湖南省政协原党组副书记、副主席阳宝华涉嫌严重违纪违法，目前正接受组织调查。而到6月19日，阳宝华正式退休恰满一年。此前已有多位退休高官被调查。只要屁股不干净，退休照样会被追究，人退休了，问题不会自动清零和洗白，掌权时权力留下的痕迹不会被抹去，没有可以免于调查和追究的豁免权。<br>　　再多的“反腐规律”，都比不上一个基本的反腐常识：天网恢恢疏而不漏，只要滥用权力乱伸手了，都会付出代价，不管什么时候，不管你是什么人，不管你是多大的官。反腐并没有其他的规律可循，唯一的铁的规律就是“伸手必被捉”。<br>　　专家喜欢总结各种“反腐规律”，热衷于从以往纪委查处的案例中寻找一些可以分析走势和预测未来的规律，从而对将要发生的事情作出判断。人们总结出了很多听起来似乎很有道理的规律：比如腐败的59岁现象，哪些岗位是“腐败高危岗位”，党报上的公开报道可以预测官员政治生命，刑不上某级别、官做到某个级别就安全了，网上传闻被官方辟谣后就代表这个官员“安全过关”了。还有，纪委干部一般都很安全，自己人不查自己人。<br>　　种种“反腐规律”，是人们根据往日经验和既有案例总结出的认知，这些规律在一定时期内也确实有一定的预测能力，能解释一些现象，其背后却反映了人们对反腐的不信任：不信法律，不信“腐败必被捉”这个铁律，而是相信有很多凌驾于法律之上的因素会影响反腐败。人们不是根据一个官员的行为和法律去判断反腐走向，而是根据权力的潜规则和人治的思维去总结和判断：只要在《新闻联播》和党报上出现了，就是安全的；只要官做到一定的级别，上面顾忌影响也不会查处他。<br>　　也就是说，这些规律都是根据“人治”思维总结的，而没有法治反腐的影子，不相信会完全依据法律去查处贪官，法治之外有无数看得见看不见的手在操纵法律。人们以前根据这些反腐规律去判断，也能屡试不爽。那些“反腐规律”的有效和灵验，反衬着法治这个铁律的乏力。<br>　　不过，在当下这场“以治标为治本赢得时间”的反腐风暴中，过去那些规律都失效了。比如，从党报机关报的报道绝看不出官员的命运了，今年3月，中央纪委宣布江西省副省长姚木根涉嫌严重违纪违法接受组织调查时，舆论很是惊讶，因为在姚落马的当天，当地机关报还刊发了署名为“省人民政府副省长姚木根”的文章。副省长被查，当地官媒竟然一点都不知道。<br>　　“不明真相”的公众早就养成了一个习惯，就是通过党报和电视上的消息来判断官员涉贪被查传闻的真假，将党报上领导的排名和露面当作政治的风向标。如果网上有传闻称某个官员受到调查了，人们会去看机关报，看这个人近期有没有在报纸上出现、电视上露面，有没有在活动中公开出现。如果出现了，就说明那些传闻可能是假的，如果没有露面，可能就有问题了。可从南京前市长季建业到江西前副省长姚木根的被查，这个规律完全失效。<br>　　人们也以为，如果网传某个官员被查，但官方迅速辟谣称这官员没问题，过去都认为这个官员“安全过关”了。可从刘铁男被查，到近期北京市公安局公安交通管理局原局长宋建国落马，证明这个规律也不靠谱―两年前宋建国曾被传涉嫌腐败被调查，可官方很快辟谣，两年后传闻成真。这是一件好事，“反腐规律”是人治思维下扭曲的现象，必须排除种种干扰，回归“伸手必被捉”这个唯一的反腐常识和吏治铁律。<br>','http://star.news.sohu.com/20140529/n400178323.shtml','2014-05-29 05:15:31')";
+//		String sqltest = "INSERT INTO top(`newspic`, `newsid`, `newstitle`, `newsauthor`, `newscontent`, `newsurl`, `newsdate`)VALUES('', 'b9a9413fa9bc49e69ac7d5f2f908e599','脝脌脗脹拢潞隆掳路麓赂炉鹿忙脗脡隆卤脢搂脨搂脥鹿脧脭脤煤脗脡禄脴鹿茅','(脭冒脠脦卤脿录颅拢潞un649)','隆隆隆隆脧虏禄露脫脙脙帽录盲脳脺陆谩鲁枚脌麓碌脛赂梅脰脰隆掳路麓赂炉鹿忙脗脡隆卤路脰脦枚脰脨鹿煤路麓赂炉脧脰脢碌碌脛脠脣拢卢驴脡脛脺脭陆脌麓脭陆驴麓虏禄露庐脰脨鹿煤碌脛路麓赂炉掳脺脕脣拢卢脪貌脦陋脛脟脨漏隆掳路麓赂炉鹿忙脗脡隆卤脭脷脧脰脢碌脙忙脟掳脢搂脨搂脕脣拢卢赂霉卤戮陆芒脢脥虏禄脕脣碌卤脧脗碌脛路麓赂炉脧脰脢碌隆拢<br>隆隆隆隆卤脠脠莽拢卢掳麓脮脮脪禄脨漏脠脣脳脺陆谩鲁枚脌麓碌脛隆掳路麓赂炉鹿忙脗脡隆卤拢卢脪禄赂枚鹿脵脭卤拢篓脫脠脝盲脢脟赂脽鹿脵拢漏脥脣脨脻脕脣拢卢碌脠脫脷戮脥脢脟隆掳掳虏脠芦脳脜脗陆隆卤拢卢录麓脢鹿脫脨脦脢脤芒拢卢脪虏虏禄禄谩脳路戮驴脕脣隆拢碌芦脰脨脩毛录脥脦炉碌脛脧没脧垄麓貌脝脝脕脣脮芒赂枚隆掳鹿忙脗脡隆卤拢潞潞镁脛脧脢隆脮镁脨颅脭颅碌鲁脳茅赂卤脢茅录脟隆垄赂卤脰梅脧炉脩么卤娄禄陋脡忙脧脫脩脧脰脴脦楼录脥脦楼路篓拢卢脛驴脟掳脮媒陆脫脢脺脳茅脰炉碌梅虏茅隆拢露酶碌陆6脭脗19脠脮拢卢脩么卤娄禄陋脮媒脢陆脥脣脨脻脟隆脗煤脪禄脛锚隆拢麓脣脟掳脪脩脫脨露脿脦禄脥脣脨脻赂脽鹿脵卤禄碌梅虏茅隆拢脰禄脪陋脝篓鹿脡虏禄赂脡戮禄拢卢脥脣脨脻脮脮脩霉禄谩卤禄脳路戮驴拢卢脠脣脥脣脨脻脕脣拢卢脦脢脤芒虏禄禄谩脳脭露炉脟氓脕茫潞脥脧麓掳脳拢卢脮脝脠篓脢卤脠篓脕娄脕么脧脗碌脛潞脹录拢虏禄禄谩卤禄脛篓脠楼拢卢脙禄脫脨驴脡脪脭脙芒脫脷碌梅虏茅潞脥脳路戮驴碌脛禄铆脙芒脠篓隆拢<br>隆隆隆隆脭脵露脿碌脛隆掳路麓赂炉鹿忙脗脡隆卤拢卢露录卤脠虏禄脡脧脪禄赂枚禄霉卤戮碌脛路麓赂炉鲁拢脢露拢潞脤矛脥酶禄脰禄脰脢猫露酶虏禄脗漏拢卢脰禄脪陋脌脛脫脙脠篓脕娄脗脪脡矛脢脰脕脣拢卢露录禄谩赂露鲁枚麓煤录脹拢卢虏禄鹿脺脢虏脙麓脢卤潞貌拢卢虏禄鹿脺脛茫脢脟脢虏脙麓脠脣拢卢虏禄鹿脺脛茫脢脟露脿麓贸碌脛鹿脵隆拢路麓赂炉虏垄脙禄脫脨脝盲脣没碌脛鹿忙脗脡驴脡脩颅拢卢脦篓脪禄碌脛脤煤碌脛鹿忙脗脡戮脥脢脟隆掳脡矛脢脰卤脴卤禄脳陆隆卤隆拢<br>隆隆隆隆脳篓录脪脧虏禄露脳脺陆谩赂梅脰脰隆掳路麓赂炉鹿忙脗脡隆卤拢卢脠脠脰脭脫脷麓脫脪脭脥霉录脥脦炉虏茅麓娄碌脛掳赂脌媒脰脨脩掳脮脪脪禄脨漏驴脡脪脭路脰脦枚脳脽脢脝潞脥脭陇虏芒脦麓脌麓碌脛鹿忙脗脡拢卢麓脫露酶露脭陆芦脪陋路垄脡煤碌脛脢脗脟茅脳梅鲁枚脜脨露脧隆拢脠脣脙脟脳脺陆谩鲁枚脕脣潞脺露脿脤媒脝冒脌麓脣脝潞玫潞脺脫脨碌脌脌铆碌脛鹿忙脗脡拢潞卤脠脠莽赂炉掳脺碌脛59脣锚脧脰脧贸拢卢脛脛脨漏赂脷脦禄脢脟隆掳赂炉掳脺赂脽脦拢赂脷脦禄隆卤拢卢碌鲁卤篓脡脧碌脛鹿芦驴陋卤篓碌脌驴脡脪脭脭陇虏芒鹿脵脭卤脮镁脰脦脡煤脙眉拢卢脨脤虏禄脡脧脛鲁录露卤冒隆垄鹿脵脳枚碌陆脛鲁赂枚录露卤冒戮脥掳虏脠芦脕脣拢卢脥酶脡脧麓芦脦脜卤禄鹿脵路陆卤脵脪楼潞贸戮脥麓煤卤铆脮芒赂枚鹿脵脭卤隆掳掳虏脠芦鹿媒鹿脴隆卤脕脣隆拢禄鹿脫脨拢卢录脥脦炉赂脡虏驴脪禄掳茫露录潞脺掳虏脠芦拢卢脳脭录潞脠脣虏禄虏茅脳脭录潞脠脣隆拢<br>隆隆隆隆脰脰脰脰隆掳路麓赂炉鹿忙脗脡隆卤拢卢脢脟脠脣脙脟赂霉戮脻脥霉脠脮戮颅脩茅潞脥录脠脫脨掳赂脌媒脳脺陆谩鲁枚碌脛脠脧脰陋拢卢脮芒脨漏鹿忙脗脡脭脷脪禄露篓脢卤脝脷脛脷脪虏脠路脢碌脫脨脪禄露篓碌脛脭陇虏芒脛脺脕娄拢卢脛脺陆芒脢脥脪禄脨漏脧脰脧贸拢卢脝盲卤鲁潞贸脠麓路麓脫鲁脕脣脠脣脙脟露脭路麓赂炉碌脛虏禄脨脜脠脦拢潞虏禄脨脜路篓脗脡拢卢虏禄脨脜隆掳赂炉掳脺卤脴卤禄脳陆隆卤脮芒赂枚脤煤脗脡拢卢露酶脢脟脧脿脨脜脫脨潞脺露脿脕猫录脻脫脷路篓脗脡脰庐脡脧碌脛脪貌脣脴禄谩脫掳脧矛路麓赂炉掳脺隆拢脠脣脙脟虏禄脢脟赂霉戮脻脪禄赂枚鹿脵脭卤碌脛脨脨脦陋潞脥路篓脗脡脠楼脜脨露脧路麓赂炉脳脽脧貌拢卢露酶脢脟赂霉戮脻脠篓脕娄碌脛脟卤鹿忙脭貌潞脥脠脣脰脦碌脛脣录脦卢脠楼脳脺陆谩潞脥脜脨露脧拢潞脰禄脪陋脭脷隆露脨脗脦脜脕陋虏楼隆路潞脥碌鲁卤篓脡脧鲁枚脧脰脕脣拢卢戮脥脢脟掳虏脠芦碌脛拢禄脰禄脪陋鹿脵脳枚碌陆脪禄露篓碌脛录露卤冒拢卢脡脧脙忙鹿脣录脡脫掳脧矛脪虏虏禄禄谩虏茅麓娄脣没隆拢<br>隆隆隆隆脪虏戮脥脢脟脣碌拢卢脮芒脨漏鹿忙脗脡露录脢脟赂霉戮脻隆掳脠脣脰脦隆卤脣录脦卢脳脺陆谩碌脛拢卢露酶脙禄脫脨路篓脰脦路麓赂炉碌脛脫掳脳脫拢卢虏禄脧脿脨脜禄谩脥锚脠芦脪脌戮脻路篓脗脡脠楼虏茅麓娄脤掳鹿脵拢卢路篓脰脦脰庐脥芒脫脨脦脼脢媒驴麓碌脙录没驴麓虏禄录没碌脛脢脰脭脷虏脵脳脻路篓脗脡隆拢脠脣脙脟脪脭脟掳赂霉戮脻脮芒脨漏路麓赂炉鹿忙脗脡脠楼脜脨露脧拢卢脪虏脛脺脗脜脢脭虏禄脣卢隆拢脛脟脨漏隆掳路麓赂炉鹿忙脗脡隆卤碌脛脫脨脨搂潞脥脕茅脩茅拢卢路麓鲁脛脳脜路篓脰脦脮芒赂枚脤煤脗脡碌脛路娄脕娄隆拢<br>隆隆隆隆虏禄鹿媒拢卢脭脷碌卤脧脗脮芒鲁隆隆掳脪脭脰脦卤锚脦陋脰脦卤戮脫庐碌脙脢卤录盲隆卤碌脛路麓赂炉路莽卤漏脰脨拢卢鹿媒脠楼脛脟脨漏鹿忙脗脡露录脢搂脨搂脕脣隆拢卤脠脠莽拢卢麓脫碌鲁卤篓禄煤鹿脴卤篓碌脛卤篓碌脌戮酶驴麓虏禄鲁枚鹿脵脭卤碌脛脙眉脭脣脕脣拢卢陆帽脛锚3脭脗拢卢脰脨脩毛录脥脦炉脨没虏录陆颅脦梅脢隆赂卤脢隆鲁陇脪娄脛戮赂霉脡忙脧脫脩脧脰脴脦楼录脥脦楼路篓陆脫脢脺脳茅脰炉碌梅虏茅脢卤拢卢脫脽脗脹潞脺脢脟戮陋脩脠拢卢脪貌脦陋脭脷脪娄脗盲脗铆碌脛碌卤脤矛拢卢碌卤碌脴禄煤鹿脴卤篓禄鹿驴炉路垄脕脣脢冒脙没脦陋隆掳脢隆脠脣脙帽脮镁赂庐赂卤脢隆鲁陇脪娄脛戮赂霉隆卤碌脛脦脛脮脗隆拢赂卤脢隆鲁陇卤禄虏茅拢卢碌卤碌脴鹿脵脙陆戮鹿脠禄脪禄碌茫露录虏禄脰陋碌脌隆拢<br>隆隆隆隆隆掳虏禄脙梅脮忙脧脿隆卤碌脛鹿芦脰脷脭莽戮脥脩酶鲁脡脕脣脪禄赂枚脧掳鹿脽拢卢戮脥脢脟脥篓鹿媒碌鲁卤篓潞脥碌莽脢脫脡脧碌脛脧没脧垄脌麓脜脨露脧鹿脵脭卤脡忙脤掳卤禄虏茅麓芦脦脜碌脛脮忙录脵拢卢陆芦碌鲁卤篓脡脧脕矛碌录碌脛脜脜脙没潞脥脗露脙忙碌卤脳梅脮镁脰脦碌脛路莽脧貌卤锚隆拢脠莽鹿没脥酶脡脧脫脨麓芦脦脜鲁脝脛鲁赂枚鹿脵脭卤脢脺碌陆碌梅虏茅脕脣拢卢脠脣脙脟禄谩脠楼驴麓禄煤鹿脴卤篓拢卢驴麓脮芒赂枚脠脣陆眉脝脷脫脨脙禄脫脨脭脷卤篓脰陆脡脧鲁枚脧脰隆垄碌莽脢脫脡脧脗露脙忙拢卢脫脨脙禄脫脨脭脷禄卯露炉脰脨鹿芦驴陋鲁枚脧脰隆拢脠莽鹿没鲁枚脧脰脕脣拢卢戮脥脣碌脙梅脛脟脨漏麓芦脦脜驴脡脛脺脢脟录脵碌脛拢卢脠莽鹿没脙禄脫脨脗露脙忙拢卢驴脡脛脺戮脥脫脨脦脢脤芒脕脣隆拢驴脡麓脫脛脧戮漏脟掳脢脨鲁陇录戮陆篓脪碌碌陆陆颅脦梅脟掳赂卤脢隆鲁陇脪娄脛戮赂霉碌脛卤禄虏茅拢卢脮芒赂枚鹿忙脗脡脥锚脠芦脢搂脨搂隆拢<br>隆隆隆隆脠脣脙脟脪虏脪脭脦陋拢卢脠莽鹿没脥酶麓芦脛鲁赂枚鹿脵脭卤卤禄虏茅拢卢碌芦鹿脵路陆脩赂脣脵卤脵脪楼鲁脝脮芒鹿脵脭卤脙禄脦脢脤芒拢卢鹿媒脠楼露录脠脧脦陋脮芒赂枚鹿脵脭卤隆掳掳虏脠芦鹿媒鹿脴隆卤脕脣隆拢驴脡麓脫脕玫脤煤脛脨卤禄虏茅拢卢碌陆陆眉脝脷卤卤戮漏脢脨鹿芦掳虏戮脰鹿芦掳虏陆禄脥篓鹿脺脌铆戮脰脭颅戮脰鲁陇脣脦陆篓鹿煤脗盲脗铆拢卢脰陇脙梅脮芒赂枚鹿忙脗脡脪虏虏禄驴驴脝脳篓D脕陆脛锚脟掳脣脦陆篓鹿煤脭酶卤禄麓芦脡忙脧脫赂炉掳脺卤禄碌梅虏茅拢卢驴脡鹿脵路陆潞脺驴矛卤脵脪楼拢卢脕陆脛锚潞贸麓芦脦脜鲁脡脮忙隆拢脮芒脢脟脪禄录镁潞脙脢脗拢卢隆掳路麓赂炉鹿忙脗脡隆卤脢脟脠脣脰脦脣录脦卢脧脗脜陇脟煤碌脛脧脰脧贸拢卢卤脴脨毛脜脜鲁媒脰脰脰脰赂脡脠脜拢卢禄脴鹿茅隆掳脡矛脢脰卤脴卤禄脳陆隆卤脮芒赂枚脦篓脪禄碌脛路麓赂炉鲁拢脢露潞脥脌么脰脦脤煤脗脡隆拢<br>','http://star.news.sohu.com/20140529/n400178323.shtml','2014-05-29 05:15:31')";
 //		MainActivity.database.execSQL(sqltest);
 		this.startService(new Intent(this, SocketService.class));  
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.tablelayout);
-		textView = (TextView)findViewById(R.id.textView1);
-		textView0 = (TextView)findViewById(R.id.textView2);
-		textView.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(MainActivity.this,Tab.class);
-				startActivity(intent);
-			}
-		});
-		
-		textView0.setOnClickListener(new OnClickListener() {
+		tt = (TextView)findViewById(R.id.textView1);
+		cj = (TextView)findViewById(R.id.textView2);
+		js = (TextView)findViewById(R.id.textView3);
+		yl = (TextView)findViewById(R.id.textView4);
+		ly = (TextView)findViewById(R.id.textView5);
+		ty = (TextView)findViewById(R.id.textView6);
+		ss = (TextView)findViewById(R.id.textView7);
+		gd = (TextView)findViewById(R.id.textView8);
+		tt.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(MainActivity.this,Tab.class);
 				Bundle mBundle = new Bundle();  
-		        mBundle.putString("Data",TOP);//压入数据  
+		        mBundle.putString("Data",TOP);//脩鹿脠毛脢媒戮脻  
 		        intent.putExtras(mBundle);
 				startActivity(intent);
 			}
 		});
-	}
+		
+		cj.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(MainActivity.this,Tab.class);
+				Bundle mBundle = new Bundle();  
+		        mBundle.putString("Data",FINANCE);//脩鹿脠毛脢媒戮脻  
+		        intent.putExtras(mBundle);
+				startActivity(intent);
+			}
+		});
+	
+	
+	js.setOnClickListener(new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent intent = new Intent(MainActivity.this,Tab.class);
+			Bundle mBundle = new Bundle();  
+	        mBundle.putString("Data",MILITARY);//脩鹿脠毛脢媒戮脻  
+	        intent.putExtras(mBundle);
+			startActivity(intent);
+		}
+	});
+	
+	yl.setOnClickListener(new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent intent = new Intent(MainActivity.this,Tab.class);
+			Bundle mBundle = new Bundle();  
+	        mBundle.putString("Data",YULE);//脩鹿脠毛脢媒戮脻  
+	        intent.putExtras(mBundle);
+			startActivity(intent);
+		}
+	});
+	ly.setOnClickListener(new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent intent = new Intent(MainActivity.this,Tab.class);
+			Bundle mBundle = new Bundle();  
+	        mBundle.putString("Data",TRAVEL);//脩鹿脠毛脢媒戮脻  
+	        intent.putExtras(mBundle);
+			startActivity(intent);
+		}
+	});
+	ty.setOnClickListener(new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent intent = new Intent(MainActivity.this,Tab.class);
+			Bundle mBundle = new Bundle();  
+	        mBundle.putString("Data",TIYU);//脩鹿脠毛脢媒戮脻  
+	        intent.putExtras(mBundle);
+			startActivity(intent);
+		}
+	});
+	ss.setOnClickListener(new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent intent = new Intent(MainActivity.this,Tab.class);
+			Bundle mBundle = new Bundle();  
+	        mBundle.putString("Data",FASHION);//脩鹿脠毛脢媒戮脻  
+	        intent.putExtras(mBundle);
+			startActivity(intent);
+		}
+	});
+	gd.setOnClickListener(new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			Intent intent = new Intent(MainActivity.this,Tab.class);
+			Bundle mBundle = new Bundle();  
+	        mBundle.putString("Data",MORE);//脩鹿脠毛脢媒戮脻  
+	        intent.putExtras(mBundle);
+			startActivity(intent);
+		}
+	});
+}
 
 	
 	@Override

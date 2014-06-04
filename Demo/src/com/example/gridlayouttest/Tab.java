@@ -1,25 +1,40 @@
 package com.example.gridlayouttest;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class Tab extends Activity {
 	
+	private static final String FILE_DIR = "./newsAPP/";
 	ArrayList<String> newsids = new ArrayList<String>();
+	ImageView imageView;
+
+
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,24 +48,43 @@ public class Tab extends Activity {
         Bundle bundle = getIntent().getExtras();    
         String table=bundle.getString("Data");//读出数据
 		try {
-			String sql = "select newstitle,newsdate,newsid from "+table;
-			Cursor cursor = MainActivity.database.rawQuery(sql, null);
+			String sql = "select newstitle,newsdate,newsid,newspic from "+table;
+			final Cursor cursor = MainActivity.database.rawQuery(sql, null);
 			if (cursor.getCount() > 0) {
-				cursor.moveToFirst();
+				cursor.moveToLast();
 
 				if(newsids!=null)
 				{
 					newsids.clear();
 				}
+				int i = 0;
 				do{
 	        	HashMap<String, Object> map = new HashMap<String, Object>();
-	        	map.put("icon", R.drawable.ee);//图像资源的ID
+	        	
+	        	File myCaptureFile = new File(Content.ALBUM_PATH + cursor.getString(
+						cursor.getColumnIndex("newspic"))
+						.split(",")[1]);
+	        	
+				if(myCaptureFile.exists())
+				{
+					 Bitmap bm = BitmapFactory.decodeFile(Content.ALBUM_PATH + cursor.getString(
+								cursor.getColumnIndex("newspic"))
+								.split(",")[1]);
+					 Drawable drawable =new BitmapDrawable(bm);
+					 map.put("icon",drawable);//图像资源的ID
+				
+				}
 	        	map.put("title", cursor.getString(cursor.getColumnIndex("newstitle")));
 	        	map.put("msg", "");
 	        	map.put("time", cursor.getString(cursor.getColumnIndex("newsdate")));
 	        	newsids.add(cursor.getString(cursor.getColumnIndex("newsid")));
+	        	if (!cursor.getString(cursor.getColumnIndex("newspic")).equals("")){
+
+
 	        	listItem.add(map);
-				}while(cursor.moveToNext());
+
+	        	}
+				}while(cursor.moveToPrevious());
 
 			} else {
 		
@@ -70,7 +104,6 @@ public class Tab extends Activity {
             //ImageItem的XML文件里面的一个ImageView,两个TextView ID
             new int[] {R.id.icon,R.id.title,R.id.msg,R.id.time}
         );
-       
         //添加并且显示
         list.setAdapter(listItemAdapter);
         
@@ -103,6 +136,27 @@ public class Tab extends Activity {
   			}
   		}); 
       }
+	
+	private void storeInSD(Bitmap bitmap,String filename) {
+		File file = new File(FILE_DIR);
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		File imageFile = new File(file, filename);
+		try {
+			imageFile.createNewFile();
+			FileOutputStream fos = new FileOutputStream(imageFile);
+			bitmap.compress(CompressFormat.JPEG, 50, fos);
+			fos.flush();
+			fos.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
   	
   	//长按菜单响应函数
   	@Override

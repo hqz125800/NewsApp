@@ -90,7 +90,7 @@
             <TableRow>
 
                 <TextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/textView7"
                     android:layout_margin="7dp"
                     android:background="#B0C4DE"
                     android:gravity="center"
@@ -100,7 +100,7 @@
                     android:textSize="30sp" />
 
                 <TextView
-                    android:id="@+id/textView6"
+                    android:id="@+id/textView8"
                     android:background="#C71585"
                     android:layout_margin="7dp"
                     android:gravity="center"
